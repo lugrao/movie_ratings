@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Movie Ratings
+    {% if movie %}
+    : {{ movie['title'] }} ({{ movie['year'] }})
+    {% endif %}
+{% endblock%}
+
+{% block main %}
+    <div class="container">
+        <form class="search-small" action="/search/title" method="GET">
+            <input type="text" name="t" placeholder="Title">
+            <input type="number" name="y" placeholder="Year (optional)">
+            <input type="submit" value="Search">
+        </form>
+    </div>
+
+    <div class="container">
+        {% if movie %}
+        <h1>{{ movie['title'] }} ({{ movie['year'] }})</h1>
+
+        <div class="movie-info">
+            <img src="{{ movie['poster'] }}" alt="[{{ movie['title'] }} poster]">
+            <p><b>Directed by:</b> {{ movie['director'] }}</p>
+            <p><b>Written by:</b> {{ movie['writer'] }}</p>
+            <p><b>Stars:</b> {{ movie['stars'] }}</p>
+            <p><b>Genre:</b> {{ movie['genre'] }}</p>
+        </div>
+
+        <div class="checkbox">
+            <div>
+                <label for="imdb"><a href="{{ movie['imdb-url'] }}" target="_blank">IMDb</a> rating: {{ movie['imdb-rating'][0] }}</label>
+                <input type="checkbox" checked="true" name="imdb" data-rating="{{ movie['imdb-rating'][1] }}"/>
+            </div>
+            <div>
+                <label for="rotten-tomatoes"><a href="{{ movie['rotten-tomatoes-url'] }}" target="_blank">Rotten Tomatoes</a> rating: {{ movie['rotten-tomatoes-rating'][0] }}</label>
+                <input type="checkbox" checked="true" name="rotten-tomatoes" data-rating="{{ movie['rotten-tomatoes-rating'][1] }}"/>
+            </div>
+            <div>
+                <label for="metacritic"><a href="{{ movie['metacritic-url'] }}" target="_blank">Metacritic</a> rating: {{ movie['metacritic-rating'][0] }}</label>
+                <input type="checkbox" checked="true" name="metacritic" data-rating="{{ movie['metacritic-rating'][1] }}"/>
+            </div>
+            <div>
+                <label for="letterboxd-rating"><a href="{{ movie['letterboxd-url']}}" target="_blank">Letterboxd</a> rating: {{ movie['letterboxd-rating'][0] }}</label>
+                <input type="checkbox" checked="true" name="letterboxd-rating" data-rating="{{ movie['letterboxd-rating'][1] }}"/>
+            </div>
+            <div>
+                <label for="tmdb-rating"><a href="{{ movie['tmdb-url'] }}" target="_blank">TMDb</a> rating: {{ movie['tmdb-rating'][0] }}</label>
+                <input type="checkbox" checked="true" name="tmdb-rating" data-rating="{{ movie['tmdb-rating'][1] }}"/>
+            </div>
+        </div>
+        
+        <div class="average-rating">
+            <h4>Average Rating:</h4>
+            <h2 id="average-rating"></h2>
+        </div>
+        
+        {% else %}
+        <h4>Couldn't find movie.</h4>
+        {% endif %}
+    </div>
+
+    {% if movies and movies|length > 1 %}
+    <div class="container">
+            <h4>More results:</h4>
+            <ul id="more-results-list">
+                {% for film in movies %}
+                    {% if film['Title'] != movie['title'] %}
+                        <li><a href="/search/imdb-id?id={{ film['imdbID'] }}">{{ film['Title'] }} ({{ film['Year'] }})</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            {% if total_results > 10 %}
+                <a id="load-more" data-query="{{ title }}" href="#more">Load more</a>
+            {% endif %}
+    </div>
+    {% elif total_results == 'Too many results.' %}
+    <div class="container">
+        <h4>More results:</h4>
+        <p>Error: Too many results.</p>
+    </div>
+    {% endif %}
+
+    <div class="div-to-deal-with-some-very-specific-problem-with-chrome-mobile"></div>
+    <script src="{{ url_for('static', filename='movie.js') }}"></script>
+{% endblock %}

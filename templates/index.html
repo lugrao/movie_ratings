@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Movie Ratings
+{% endblock%}
+
+{% block main %}
+    <div class="container">
+        <h2 class="search-heading">Search by title [and year]</h2>
+        <form action="/search/title" method="GET">
+            <input type="text" name="t" placeholder="Title">
+            <input type="number" name="y" placeholder="Year (optional)">
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    <div class="container">
+        <h2 class="search-heading">Search by IMDb ID</h2>
+        <form action="/search/imdb-id" method="GET">
+            <input type="text" name="id" placeholder="IMDb ID">
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+{% endblock %}

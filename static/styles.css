@@ -1,0 +1,171 @@
+html {
+    height: 100%;
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0 5px;
+    background-color: ivory;
+}
+
+main {
+    margin-bottom: 50px;
+}
+
+nav {
+    top: 0;
+    color: white;
+    background-color: black;
+    position: sticky;
+    text-align: center;
+    padding: 5px 0;
+    border-bottom: 1px black solid;
+}
+
+nav h4 {
+    margin: 0;
+}
+
+nav a:link, nav a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+input {
+    height: 36px;
+}
+
+ul {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+li {
+    margin-top: 4px;
+}
+
+form {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 9px;
+}
+
+a {
+    color: #8f0000;
+    text-decoration: none;
+}
+
+a:visited {
+    color: #690000;
+}
+
+a:hover {
+    color: #b60000;
+}
+
+.search-heading, h1 {
+    text-align: center;
+}
+
+.movie-info {
+    padding: 0 10px;
+    overflow: hidden;
+}
+
+.movie-info img {
+    float: left;
+    padding-right: 20px;
+    width: 35%;
+}
+
+.movie-info p {
+    margin-top: 0;
+}
+
+.container {
+    max-width: 550px;
+    margin: 30px auto;
+    padding: 0 13px;
+    background-color: white;
+    padding: 12px;
+    border: 1px solid black;
+}
+
+.search-small {
+    display: grid;
+    grid-template-columns: 1.3fr 0.8fr 0.5fr;
+    grid-gap: 5px;
+    align-items: center;
+    justify-items: center;
+}
+
+.search-small input {
+    width: 85%;
+    padding-left: 6px;
+}
+
+.search-small :nth-child(3) {
+    font-weight: bold;
+}
+
+.checkbox {
+    margin-top: 15px;
+    clear: left;
+    border: 1px dotted #dddddd;
+    padding: 0 5px;
+}
+
+.checkbox div {
+    border-width: 1px;
+    border-color: #dddddd;
+    border-style: none none dotted;
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: 1.8fr 0.2fr;
+    align-items: center;
+    margin: 0;
+    padding: 5px 0;
+}
+
+.checkbox div:nth-child(5) {
+    border-style: none;
+}
+
+.checkbox div input {
+    height: 15px;
+    justify-self: end;
+}
+
+.average-rating {
+    margin-top: 60px;
+    text-align: center;
+}
+
+.average-rating h4 {
+    margin: 0;
+}
+
+#average-rating {
+    margin: 5px 0 20px;
+    font-size: 2.5rem;
+}
+
+
+@media (max-width: 300px) {
+    .movie-info img { 
+        float: none;
+        display: block;
+        padding: 0;
+        margin: 0 auto;
+        width: 80%;
+        height: 100%;
+    }
+}
+
+.div-to-deal-with-some-very-specific-problem-with-chrome-mobile {
+    margin: 4rem auto;
+    background-color: #fffff0;
+    border: 1px solid #fffff0;
+}
