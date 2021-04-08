@@ -44,6 +44,16 @@ def search_imdb_id():
     return render_template('movie.html', title=title, movie=movie, movies='1')
 
 
+@app.route('/letterboxd-rating')
+def letterboxd_rating():
+    imdb_id = request.args.get('id')
+    title = request.args.get('t')
+    year = request.args.get('y')
+    rating, url = get_letterboxd_rating(imdb_id, title, year)
+    response = {'rating': rating, 'url': url}
+    return response
+
+
 @app.route('/more-results')
 def more_results():
     title = request.args.get('t')

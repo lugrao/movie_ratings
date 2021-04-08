@@ -16,7 +16,7 @@
         </form>
     </div>
 
-    <div class="container">
+    <div class="container" id="movie" data-title="{{ movie['title'] }}" data-year="{{ movie['year'] }}" data-imdbid="{{ movie['imdb-id'] }}">
         {% if movie %}
         <h1>{{ movie['title'] }} ({{ movie['year'] }})</h1>
 
@@ -42,8 +42,8 @@
                 <input type="checkbox" checked="true" name="metacritic" data-rating="{{ movie['metacritic-rating'][1] }}"/>
             </div>
             <div>
-                <label for="letterboxd-rating"><a href="{{ movie['letterboxd-url']}}" target="_blank">Letterboxd</a> rating: {{ movie['letterboxd-rating'][0] }}</label>
-                <input type="checkbox" checked="true" name="letterboxd-rating" data-rating="{{ movie['letterboxd-rating'][1] }}"/>
+                <label for="letterboxd-rating">Letterboxd rating: loading...</label>
+                <input type="checkbox" checked="true" name="letterboxd-rating" data-rating="-1"/>
             </div>
             <div>
                 <label for="tmdb-rating"><a href="{{ movie['tmdb-url'] }}" target="_blank">TMDb</a> rating: {{ movie['tmdb-rating'][0] }}</label>
