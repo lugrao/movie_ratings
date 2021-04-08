@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from helpers import get_movie, get_movies
+from helpers import get_movie, get_movies, get_letterboxd_rating
 
 app = Flask(__name__)
 
