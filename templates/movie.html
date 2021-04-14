@@ -1,87 +1,126 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Movie Ratings
-    {% if movie %}
-    : {{ movie['title'] }} ({{ movie['year'] }})
-    {% endif %}
+Movie Ratings{% if movie %}: {{ movie['title'] }} ({{ movie['year'] }})
+{% endif %}
 {% endblock%}
 
 {% block main %}
-    <div class="container">
-        <form class="search-small" action="/search/title" method="GET">
-            <input type="text" name="t" placeholder="Title">
-            <input type="number" name="y" placeholder="Year (optional)">
-            <input type="submit" value="Search">
-        </form>
-    </div>
+<div class="container">
+    <form class="search-small" action="/search" method="GET" autocomplete="off">
+        <input type="text" name="t" placeholder="Title">
+        <input type="number" name="y" placeholder="Year (optional)">
+        <input type="submit" value="Search" class="clickable">
+    </form>
+</div>
 
-    <div class="container" id="movie" data-title="{{ movie['title'] }}" data-year="{{ movie['year'] }}" data-imdbid="{{ movie['imdb-id'] }}">
-        {% if movie %}
-        <h1>{{ movie['title'] }} ({{ movie['year'] }})</h1>
+<div class="container" id="movie" data-title="{{ movie['title'] }}" data-year="{{ movie['year'] }}"
+    data-imdbid="{{ movie['imdb-id'] }}">
+    {% if movie %}
+    <h1>{{ movie['title'] }} {{ movie['year'] }}</h1>
 
-        <div class="movie-info">
-            <img src="{{ movie['poster'] }}" alt="[{{ movie['title'] }} poster]">
-            <p><b>Directed by:</b> {{ movie['director'] }}</p>
-            <p><b>Written by:</b> {{ movie['writer'] }}</p>
-            <p><b>Stars:</b> {{ movie['stars'] }}</p>
-            <p><b>Genre:</b> {{ movie['genre'] }}</p>
-        </div>
-
-        <div class="checkbox">
-            <div>
-                <label for="imdb"><a href="{{ movie['imdb-url'] }}" target="_blank">IMDb</a> rating: {{ movie['imdb-rating'][0] }}</label>
-                <input type="checkbox" checked="true" name="imdb" data-rating="{{ movie['imdb-rating'][1] }}"/>
-            </div>
-            <div>
-                <label for="rotten-tomatoes"><a href="{{ movie['rotten-tomatoes-url'] }}" target="_blank">Rotten Tomatoes</a> rating: {{ movie['rotten-tomatoes-rating'][0] }}</label>
-                <input type="checkbox" checked="true" name="rotten-tomatoes" data-rating="{{ movie['rotten-tomatoes-rating'][1] }}"/>
-            </div>
-            <div>
-                <label for="metacritic"><a href="{{ movie['metacritic-url'] }}" target="_blank">Metacritic</a> rating: {{ movie['metacritic-rating'][0] }}</label>
-                <input type="checkbox" checked="true" name="metacritic" data-rating="{{ movie['metacritic-rating'][1] }}"/>
-            </div>
-            <div>
-                <label for="letterboxd-rating">Letterboxd rating: <span>loading...</span></label>
-                <input type="checkbox" checked="true" name="letterboxd-rating" data-rating="-1"/>
-            </div>
-            <div>
-                <label for="tmdb-rating"><a href="{{ movie['tmdb-url'] }}" target="_blank">TMDb</a> rating: {{ movie['tmdb-rating'][0] }}</label>
-                <input type="checkbox" checked="true" name="tmdb-rating" data-rating="{{ movie['tmdb-rating'][1] }}"/>
-            </div>
-        </div>
-        
-        <div class="average-rating">
-            <h4>Average Rating:</h4>
-            <h2 id="average-rating"></h2>
-        </div>
-        
-        {% else %}
-        <h4>Couldn't find movie.</h4>
+    <div class="movie-info">
+        {% if movie['poster_path'] %}
+        <img src="https://www.themoviedb.org/t/p/w1280{{ movie['poster_path'] }}" alt="[{{ movie['title'] }} poster]">
         {% endif %}
-    </div>
-
-    {% if movies and movies|length > 1 %}
-    <div class="container">
-            <h4>More results:</h4>
-            <ul id="more-results-list">
-                {% for film in movies %}
-                    {% if film['Title'] != movie['title'] %}
-                        <li><a href="/search/imdb-id?id={{ film['imdbID'] }}">{{ film['Title'] }} ({{ film['Year'] }})</a></li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-            {% if total_results > 10 %}
-                <a id="load-more" data-query="{{ title }}" href="#more">Load more</a>
+        <p class="overview">{{ movie['overview'] }}</p>
+        <hr>
+        <p><b>Directed by:</b>
+            {% if movie['direction'] is not string %}
+            {% for director in movie['direction'] %}
+            <span><a href="/person/{{  director['id'] }}">{{ director['name'] }}</a></span>{{ ',' if director !=
+            movie['direction'][-1] else '.'}}
+            {% endfor %}
+            {% else %}
+            <span>{{ movie['direction'] }}.</span>
             {% endif %}
+        </p>
+        <p><b>Written by:</b> {{ movie['writer'] }}
+            {% if movie['writing'] is not string %}
+            {% for writer in movie['writing'] %}
+            <span><a href="/person/{{  writer['id'] }}">{{ writer['name']}} </a>({{ writer['job'] }})</span>{{ ',' if
+            writer != movie['writing'][-1] else '.'}}
+            {% else %}
+            {% endfor %}
+            {% else %}
+            <span>{{ movie['writing'] }}.</span>
+            {% endif %}
+        </p>
+        <p><b>Actors:</b>
+            {% if movie['actors'] is not string %}
+            {% for actor in movie['actors'] %}
+            <span><a href="/person/{{  actor['id'] }}">{{ actor['name'] }}</a></span>{{ ',' if actor !=
+            movie['actors'][-1] else '.' }}
+            {% endfor %}
+            {% else %}
+            <span>{{ movie['actors'] }}.</span>
+            {% endif%}
+        </p>
+        <p><b>Genres:</b> {{ movie['genres'] }}.</p>
     </div>
-    {% elif total_results == 'Too many results.' %}
-    <div class="container">
-        <h4>More results:</h4>
-        <p>Error: Too many results.</p>
-    </div>
-    {% endif %}
 
-    <div class="div-to-deal-with-some-very-specific-problem-with-chrome-mobile"></div>
-    <script src="{{ url_for('static', filename='movie.js') }}"></script>
+    <div class="checkbox">
+        <div>
+            <label for="imdb"><a href="{{ movie['imdb-url'] }}" target="_blank">IMDb</a> rating: {{
+                movie['imdb-rating'][0] }}</label>
+            <input class="clickable" type="checkbox" checked="true" name="imdb" data-rating="{{ movie['imdb-rating'][1] }}" />
+        </div>
+        <div>
+            <label for="rotten-tomatoes"><a href="{{ movie['rotten-tomatoes-url'] }}" target="_blank">Rotten
+                    Tomatoes</a> rating: {{ movie['rotten-tomatoes-rating'][0] }}</label>
+            <input class="clickable" type="checkbox" checked="true" name="rotten-tomatoes"
+                data-rating="{{ movie['rotten-tomatoes-rating'][1] }}" />
+        </div>
+        <div>
+            <label for="metacritic"><a href="{{ movie['metacritic-url'] }}" target="_blank">Metacritic</a> rating: {{
+                movie['metacritic-rating'][0] }}</label>
+            <input class="clickable" type="checkbox" checked="true" name="metacritic" data-rating="{{ movie['metacritic-rating'][1] }}" />
+        </div>
+        <div>
+            <label for="letterboxd-rating">Letterboxd rating: <span>loading...</span></label>
+            <input class="clickable" type="checkbox" checked="true" name="letterboxd-rating" data-rating="-1" />
+        </div>
+        <div>
+            <label for="tmdb-rating"><a href="{{ movie['tmdb-url'] }}" target="_blank">TMDb</a> rating: {{
+                movie['tmdb-rating'][0] }}</label>
+            <input class="clickable" type="checkbox" checked="true" name="tmdb-rating" data-rating="{{ movie['tmdb-rating'][1] }}" />
+        </div>
+    </div>
+
+    <div class="average-rating">
+        <h4>Average Rating:</h4>
+        <h2 id="average-rating"></h2>
+    </div>
+    {% else %}
+    <h4>Couldn't find movie.</h4>
+    {% endif %}
+</div>
+
+{% if not id and more_results and more_results['movies']|length > 1 %}
+<div class="container">
+    <h4>More results for "{{ title + ' ' + year if year else title}}":</h4>
+    <ul id="more-results-list">
+        {% for i in more_results['movies'] %}
+        {% if i != more_results['movies'][0] %}
+        <li><a href="/movie/{{ i['tmdb-id'] }}">{{ i['title'] }} {{ i['year'] }}</a></li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+    {% if more_results['total_pages'] > 1 %}
+    <a id="load-more" data-title="{{ title }}" data-year="{{ year }}" data-id="{{ id }}" href="#more">Load more</a>
+    {% endif %}
+</div>
+{% elif id and more_results and more_results['movies']|length > 1 %}
+<div class="container">
+    <h4>Similar movies:</h4>
+    <ul id="more-results-list">
+        {% for i in more_results['movies'] %}
+        <li><a href="/movie/{{ i['tmdb-id'] }}">{{ i['title'] }} {{ i['year'] }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<div class="div-to-deal-with-some-very-specific-problem-with-chrome-mobile"></div>
+<script src="{{ url_for('static', filename='movie.js') }}"></script>
 {% endblock %}

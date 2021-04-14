@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from helpers import get_movie, get_movies, get_letterboxd_rating
+from helpers import get_movie, get_letterboxd_rating, get_more_movies, get_person
 
 app = Flask(__name__)
 
@@ -9,7 +9,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/search/title')
+@app.route('/search')
 def search_title():
     title = request.args.get('t').strip()
     if not title:
@@ -22,26 +22,21 @@ def search_title():
         except ValueError:
             return 'You must provide a valid year.'
 
-    movie = get_movie(title, year)
-    movies, total_results = get_movies(title)
+    movie, more_results = get_movie(title, year)
 
-    return render_template('movie.html', title=title, movie=movie, movies=movies, total_results=total_results)
+    return render_template('movie.html', title=title, year=year, movie=movie, more_results=more_results)
 
 
-@app.route('/search/imdb-id')
-def search_imdb_id():
+@app.route('/movie/<id>/')
+def movie(id):
+    movie, more_results = get_movie(tmdb_id=id)
+    return render_template('movie.html', title='', year='', id=id, movie=movie, more_results=more_results)
 
-    imdb_id = request.args.get('id').strip()
-    if not imdb_id:
-        return 'Yo must provide a valid IMDb ID.'
 
-    movie = get_movie(imdb_id=imdb_id)
-    if not movie:
-        return render_template('movie.html')
-
-    title = movie['title']
-
-    return render_template('movie.html', title=title, movie=movie, movies='1')
+@app.route('/person/<id>/')
+def person(id):
+    info, jobs = get_person(id)
+    return render_template('person.html', info=info, jobs=jobs)
 
 
 @app.route('/letterboxd-rating')
@@ -57,7 +52,8 @@ def letterboxd_rating():
 @app.route('/more-results')
 def more_results():
     title = request.args.get('t')
+    year = request.args.get('y')
+    id = request.args.get('id')
     page = int(request.args.get('p'))
-    movies, total_results = get_movies(title, page)
-    response = {'movies': movies, 'total_results': total_results}
-    return response
+    more_results = get_more_movies(title, year, id, page)
+    return more_results
