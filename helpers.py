@@ -37,7 +37,7 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
     if not actors:
         actors = omdb['actors']
 
-    genres = ', '.join([i['name'] for i in movie['genres']])
+    genres = [{'name': i['name'], 'id': i['id']} for i in movie['genres']]
     if not genres:
         genres = omdb['genres']
 
@@ -48,6 +48,7 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
     movie_data = {
         'title': movie['title'],
         'year': f'({movie["release_date"][:4]})' if movie['release_date'] else '',
+        'runtime': f'{movie["runtime"]} mins' if movie['runtime'] else '',
         'overview': movie['overview'],
         'direction': direction,
         'writing': writing,
@@ -140,12 +141,12 @@ def get_omdb_data(imdb_id):
         writing = movie['Writer']
     except:
         writing = 'N/A'
-    
+
     try:
         actors = movie['Actors']
     except:
         actors = 'N/A'
-    
+
     try:
         genres = movie['Genre']
     except:
@@ -229,7 +230,7 @@ def get_person(id):
             'year': year,
             'id': movie['id']
         })
-    
+
     if cast_data:
         jobs['Actor'] = []
         for movie in cast_data:
@@ -245,3 +246,31 @@ def get_person(id):
             })
 
     return person.info(), jobs
+
+
+def get_genre(id, name='', page=1):
+    tmdb.API_KEY = os.environ.get('TMDB_KEY')
+    genre = tmdb.Genres(id)
+    genre_movies = genre.movies(page=page, include_all_movies=True)
+    movies = []
+
+    for movie in genre_movies['results']:
+        try:
+            year = f'({movie["release_date"][:4]})' if movie['release_date'] else ''
+        except:
+            year = ''
+
+        movies.append({
+            'title': movie['title'],
+            'year': year,
+            'poster_path': movie['poster_path'],
+            'id': movie['id']
+        })
+
+    movies_data = {
+        'genre': {'name': name, 'id': id},
+        'movies': movies,
+        'total_pages': genre_movies['total_pages']
+    }
+
+    return movies_data

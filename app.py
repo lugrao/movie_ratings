@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from helpers import get_movie, get_letterboxd_rating, get_more_movies, get_person
+from helpers import get_movie, get_letterboxd_rating, get_more_movies, get_person, get_genre
 
 app = Flask(__name__)
 
@@ -38,6 +38,11 @@ def person(id):
     info, jobs = get_person(id)
     return render_template('person.html', info=info, jobs=jobs)
 
+@app.route('/genre/<id>/<name>')
+def genre(id, name):
+    movies = get_genre(id, name)
+    return render_template('genre.html', movies=movies)
+
 
 @app.route('/letterboxd-rating')
 def letterboxd_rating():
@@ -57,3 +62,8 @@ def more_results():
     page = int(request.args.get('p'))
     more_results = get_more_movies(title, year, id, page)
     return more_results
+
+@app.route('/more-genre-results/<id>/<page>')
+def more_genre_results(id, page):
+    response = get_genre(id, page=page)
+    return response

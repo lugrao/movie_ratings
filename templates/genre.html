@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Movie Ratings | movies['genre']['name']
+{% endblock%}
+
+{% block main %}
+
+<div class="container">
+    <form class="search-small" action="/search" method="GET" autocomplete="off">
+        <input type="text" name="t" placeholder="Title">
+        <input type="number" name="y" placeholder="Year (optional)">
+        <input type="submit" value="Search" class="clickable">
+    </form>
+</div>
+
+<div class="container">
+    <h4>{{ movies['genre']['name'] }} movies</h4>
+    <ul id="movie-list">
+        {% for movie in movies['movies']%}
+        <li><a href="/movie/{{ movie['id'] }}">{{ movie['title'] }} {{ movie['year'] }}</a></li>
+        {% endfor %}
+    </ul>
+    <a id="load-more" data-genre="{{ movies['genre']['name'] }}" data-id="{{ movies['genre']['id'] }}" href="#more">Load more</a>
+</div>
+
+<div class="div-to-deal-with-some-very-specific-problem-with-chrome-mobile"></div>
+<script src="{{ url_for('static', filename='genre.js') }}"></script>
+{% endblock %}

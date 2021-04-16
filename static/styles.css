@@ -43,7 +43,7 @@ ul {
 }
 
 li {
-    margin-top: 4px;
+    margin-top: 8px;
 }
 
 form {
@@ -89,6 +89,15 @@ hr {
 
 .movie-info p {
     margin-top: 0;
+}
+
+.time-genres {
+    margin-bottom: 20px;
+}
+
+.time-genres p {
+    margin: 5px 0;
+    font-size: 14px;
 }
 
 .person ul {

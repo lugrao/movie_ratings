@@ -68,7 +68,7 @@ async function getLetterboxdRating() {
                 $checkbox.dataset.rating = response.rating[1];
                 $checkbox.checked = true;
                 $checkbox.disabled = false;
-                $checkbox.className = 'clickable';            
+                $checkbox.className = 'clickable';
                 updateRating();
             }
         } catch (error) {
@@ -81,20 +81,22 @@ async function getLetterboxdRating() {
 async function loadMoreResults() {
     let url = `/more-results?t=${title}&y=${year}&id=${id}&p=${page}`;
     let response;
+    let $li = document.querySelectorAll('li');
+    let scrollItem = $li[$li.length - 2];
 
     try {
         response = await fetch(url).then(res => res.json()).then(data => data);
     } catch (error) {
-        return console.error(error);        
+        return console.error(error);
     }
 
-    response.movies.forEach(movie => {
+    response.movies.forEach((movie, index) => {
         let new_movie = document.createElement('li');
         new_movie.innerHTML = `<a href="/movie/${movie['tmdb-id']}">${movie['title']} ${movie['year']}</a>`;
         $moreResultsList.appendChild(new_movie);
-    })
+    });
 
-    $loadMore.scrollIntoView();
+    scrollItem.scrollIntoView();
 
     page++;
 
