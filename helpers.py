@@ -193,13 +193,17 @@ def get_letterboxd_rating(tmdb_id, title='', year=''):
     try:
         search_res = requests.get(f'https://letterboxd.com/tmdb/{tmdb_id}')
         search_soup = BeautifulSoup(search_res.text, 'html.parser')
-        movie_rating = round(float(search_soup.find_all(
-            attrs={'name': 'twitter:data2'})[0]['content'].split()[0]), 1)
         movie_url = search_soup.find_all(
             attrs={'name': 'twitter:url'})[0]['content']
+        movie_rating = round(float(search_soup.find_all(
+            attrs={'name': 'twitter:data2'})[0]['content'].split()[0]), 1)
+
         return [str(movie_rating) + '/5', movie_rating * 2], movie_url
     except:
-        return ['Not available', -1], f'https://letterboxd.com/search/{title} {year}'
+        url = f'https://letterboxd.com/search/{title} {year}'
+        if movie_url:
+            url = movie_url
+        return ['Not available', -1], url
 
 
 def get_person(id):
