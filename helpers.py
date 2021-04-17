@@ -62,6 +62,7 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
         'rotten-tomatoes-url': f'https://www.rottentomatoes.com/search?search={movie["title"]}',
         'metacritic-rating': omdb['metacritic_rating'],
         'metacritic-url': f'https://www.metacritic.com/search/movie/{movie["title"]}/results',
+        'tmdb-id': id,
         'tmdb-rating': [str(movie['vote_average']) + '/10', float(movie['vote_average'])],
         'tmdb-url': f'https://www.themoviedb.org/movie/{movie["id"]}'
     }
@@ -187,25 +188,18 @@ def get_omdb_data(imdb_id):
     }
 
 
-def get_letterboxd_rating(imdb_id, title='', year=''):
+def get_letterboxd_rating(tmdb_id, title='', year=''):
 
     try:
-        search_res = requests.get(f'https://letterboxd.com/search/{imdb_id}')
+        search_res = requests.get(f'https://letterboxd.com/tmdb/{tmdb_id}')
         search_soup = BeautifulSoup(search_res.text, 'html.parser')
-        search_result = search_soup.ul.li.a['href']
-        movie_url = f'https://letterboxd.com{search_result}'
-        movie = requests.get(
-            f'https://letterboxd.com/csi{search_result}rating-histogram/')
-        movie_soup = BeautifulSoup(movie.text, 'html.parser')
-        movie_rating = movie_soup.find('a', class_='display-rating').text
-
-        return [movie_rating + '/5', float(movie_rating) * 2], movie_url
+        movie_rating = round(float(search_soup.find_all(
+            attrs={'name': 'twitter:data2'})[0]['content'].split()[0]), 1)
+        movie_url = search_soup.find_all(
+            attrs={'name': 'twitter:url'})[0]['content']
+        return [str(movie_rating) + '/5', movie_rating * 2], movie_url
     except:
-        url = f'https://letterboxd.com/search/{title} {year}'
-        if movie_soup and '/film/' in search_result:
-            url = movie_url
-
-        return ['Not available', -1], url
+        return ['Not available', -1], f'https://letterboxd.com/search/{title} {year}'
 
 
 def get_person(id):

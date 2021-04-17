@@ -26,12 +26,12 @@ getLetterboxdRating();
 
 async function getLetterboxdRating() {
     let $movie = document.getElementById('movie');
-    let imdbID = $movie.dataset.imdbid;
+    let tmdbID = $movie.dataset.tmdbid;
     let title = $movie.dataset.title;
     let year = $movie.dataset.year;
     let $checkbox = document.getElementsByName('letterboxd-rating')[0];
     let $label = $checkbox.previousElementSibling;
-    let url = `/letterboxd-rating?id=${imdbID}&t=${title}&y=${year}`;
+    let url = `/letterboxd-rating?id=${tmdbID}&t=${title}&y=${year}`;
     let response;
 
     if (!storage.getItem(current_url)) {
