@@ -63,7 +63,7 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
         'metacritic-rating': omdb['metacritic_rating'],
         'metacritic-url': f'https://www.metacritic.com/search/movie/{movie["title"]}/results',
         'tmdb-id': id,
-        'tmdb-rating': [str(movie['vote_average']) + '/10', float(movie['vote_average'])],
+        'tmdb-rating': [str(movie['vote_average']) + '/10', float(movie['vote_average'])] if movie['vote_count'] > 0 else ['Not available', -1],
         'tmdb-url': f'https://www.themoviedb.org/movie/{movie["id"]}'
     }
 
