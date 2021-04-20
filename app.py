@@ -75,7 +75,6 @@ def more_results():
 @app.route('/more-person-results/<query>/<page>')
 def more_person_results(query, page):
     response = get_person(query=query, page=page)
-    print(page)
     return response
 
 @app.route('/more-genre-results/<id>/<page>')
