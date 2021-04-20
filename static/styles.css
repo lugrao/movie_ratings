@@ -72,10 +72,6 @@ hr {
     clear: both;
 }
 
-.search-heading, h1 {
-    text-align: center;
-}
-
 .movie-info {
     padding: 0 10px;
     overflow: hidden;
@@ -143,21 +139,38 @@ hr {
     border: 1px solid black;
 }
 
-.search-small {
+.search {
+    height: 77px;
+}
+
+.search-form {
     display: grid;
     grid-template-columns: 1.3fr 0.8fr 0.5fr;
     grid-gap: 5px;
     align-items: center;
-    justify-items: center;
 }
 
-.search-small input {
+.search-form input {
     width: 85%;
     padding-left: 6px;
 }
 
-.search-small :nth-child(3) {
+.search-form .clickable {
     font-weight: bold;
+}
+
+.select-search {
+    margin: 0 0 10px 20px;
+    font-weight: bold;
+}
+
+#search-person > input:nth-child(1) {
+    grid-area: 1 / 1 / 1 / span 2;
+    width: 94.5%;
+}
+
+#search-movie {
+    grid-template-columns: 1.3fr 0.8fr 0.5fr;
 }
 
 .checkbox {
@@ -204,6 +217,10 @@ hr {
 #average-rating {
     margin: 5px 0 20px;
     font-size: 2.5rem;
+}
+
+#select-search {
+    text-align: center;
 }
 
 

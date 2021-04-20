@@ -1,24 +1,54 @@
 {% extends "layout.html" %}
 
 {% block title %}
-Movie Ratings | {{ info['name'] }}
+Movie Ratings 
+{% if info %}
+| {{ info['name'] }}
+{% endif %}
 {% endblock%}
 
 {% block main %}
-
+{% if search_result %}
 <div class="container">
-    <form class="search-small" action="/search" method="GET" autocomplete="off">
-        <input type="text" name="t" placeholder="Title">
-        <input type="number" name="y" placeholder="Year (optional)">
-        <input type="submit" value="Search" class="clickable">
-    </form>
+    <h4>Results for "{{ query }}":</h4>
+    <ul id="results-list">
+        {% for person in search_result['results'] %}
+        {% if person != search_result['results'][0] %}
+        <hr>{% endif %}
+        <li class="person-info">
+            {% if person['profile_path'] %}
+            <img src="https://www.themoviedb.org/t/p/w180_and_h180_face/{{ person['profile_path'] }}"
+                alt="{{ person['name'] }}">
+            {% else %}
+            <img src="{{ url_for('static', filename='blank_profile_pic.png') }}" alt="{{ person['name'] }}">
+            {% endif %}
+            <a href="/person/{{ person['id'] }}">{{ person['name'] }}</a> - {{ person['known_for_department'] }}
+            <br>
+            <br>
+            {% if person['known_for'] %}
+            <p>Known for:
+                {% for movie in person['known_for'] %}
+                <a href="/movie/{{ movie['id'] }}">{{ movie['title'] }}</a>{{ ',' if movie !=
+                person['known_for'][-1] else '.'}}
+                {% endfor %}
+            </p>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% if search_result['total_pages'] > 1 %}
+    <hr id="load-more-hr">
+    <a id="load-more" data-query="{{ query }}" href="#more">Load more</a>
+    {% endif %}
 </div>
-
+{% else %}
 <div class="container person">
     <h2>{{ info['name'] }}</h2>
     <div class="person-info">
         {% if info['profile_path'] %}
         <img src="https://www.themoviedb.org/t/p/w1280{{ info['profile_path'] }}" alt="{{ info['name'] }}">
+        {% else %}
+        <img src="{{ url_for('static', filename='blank_profile_pic.png') }}" alt="{{ info['name'] }}">
         {% endif %}
         {% for p in info['biography'].split('\n\n') %}
         <p>{{ p }}</p>
@@ -33,6 +63,7 @@ Movie Ratings | {{ info['name'] }}
     </ul>
     {% endfor%}
 </div>
+{% endif %}
 
 <div class="div-to-deal-with-some-very-specific-problem-with-chrome-mobile"></div>
 <script src="{{ url_for('static', filename='person.js') }}"></script>

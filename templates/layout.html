@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,13 +9,36 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>{% block title %}{% endblock %}</title>
 </head>
+
 <body>
     <nav>
         <h4><a href="/">MOVIE RATINGS</a></h4>
     </nav>
     <main>
+        <div class="container search">
+            <div class="select-search">
+                <label for="select-search">Search</label>
+                <select name="search" id="select-search">
+                    <option value="...">&nbsp;&nbsp;&nbsp;</option>
+                    <option value="search-movie">Movie</option>
+                    <option value="search-person">Person</option>
+                </select>
+            </div>
+
+            <form id="search-movie" class="search-form" action="/search" method="GET" autocomplete="off" style="display:none;">
+                <input type="text" name="t" placeholder="Title">
+                <input type="number" name="y" placeholder="Year (optional)">
+                <input type="submit" value="Submit" class="clickable">
+            </form>
+
+            <form id="search-person" class="search-form" action="/search/person" method="GET" autocomplete="off" style="display:none;">
+                <input type="text" name="n" placeholder="Name">
+                <input type="submit" value="Submit" class="clickable">
+            </form>
+        </div>
         {% block main %}{% endblock %}
     </main>
-    
+    <script src="{{ url_for('static', filename='search.js') }}"></script>
 </body>
+
 </html>

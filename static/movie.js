@@ -82,7 +82,7 @@ async function loadMoreResults() {
     let url = `/more-results?t=${title}&y=${year}&id=${id}&p=${page}`;
     let response;
     let $li = document.querySelectorAll('li');
-    let scrollItem = $li[$li.length - 2];
+    let scrollItem = $li[$li.length - 1];
 
     try {
         response = await fetch(url).then(res => res.json()).then(data => data);
@@ -90,7 +90,7 @@ async function loadMoreResults() {
         return console.error(error);
     }
 
-    response.movies.forEach((movie, index) => {
+    response.movies.forEach(movie => {
         let new_movie = document.createElement('li');
         new_movie.innerHTML = `<a href="/movie/${movie['tmdb-id']}">${movie['title']} ${movie['year']}</a>`;
         $moreResultsList.appendChild(new_movie);

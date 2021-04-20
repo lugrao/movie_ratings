@@ -1,16 +1,8 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Movie Ratings
+Movie Ratings
 {% endblock%}
 
 {% block main %}
-    <div class="container">
-        <h2 class="search-heading">Search movie by title [and year]</h2>
-        <form action="/search" method="GET" autocomplete="off">
-            <input type="text" name="t" placeholder="Title">
-            <input type="number" name="y" placeholder="Year (optional)">
-            <input type="submit" value="Submit" class="clickable">
-        </form>
-    </div>
 {% endblock %}

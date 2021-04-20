@@ -206,44 +206,56 @@ def get_letterboxd_rating(tmdb_id, title='', year=''):
         return ['Not available', -1], url
 
 
-def get_person(id):
+def get_person(id='', query='', page=1):
     tmdb.API_KEY = os.environ.get('TMDB_KEY')
-    person = tmdb.People(id)
-    crew_data = person.movie_credits()['crew']
-    cast_data = person.movie_credits()['cast']
-    jobs = {}
 
-    for movie in crew_data:
+    if id:
+        person = tmdb.People(id)
+        crew_data = person.movie_credits()['crew']
+        cast_data = person.movie_credits()['cast']
+        jobs = {}
 
-        if movie['job'] not in jobs:
-            jobs[movie['job']] = []
+        for movie in crew_data:
 
-        try:
-            year = f'({movie["release_date"][:4]})' if movie['release_date'] else ''
-        except:
-            year = ''
+            if movie['job'] not in jobs:
+                jobs[movie['job']] = []
 
-        jobs[movie['job']].append({
-            'title': movie['title'],
-            'year': year,
-            'id': movie['id']
-        })
-
-    if cast_data:
-        jobs['Actor'] = []
-        for movie in cast_data:
             try:
                 year = f'({movie["release_date"][:4]})' if movie['release_date'] else ''
             except:
                 year = ''
 
-            jobs['Actor'].append({
+            jobs[movie['job']].append({
                 'title': movie['title'],
                 'year': year,
                 'id': movie['id']
             })
 
-    return person.info(), jobs
+        if cast_data:
+            jobs['Actor'] = []
+            for movie in cast_data:
+                try:
+                    year = f'({movie["release_date"][:4]})' if movie['release_date'] else ''
+                except:
+                    year = ''
+
+                jobs['Actor'].append({
+                    'title': movie['title'],
+                    'year': year,
+                    'id': movie['id']
+                })
+
+        return person.info(), jobs
+
+    search = tmdb.Search()
+    result = search.person(query=query, page=page)
+
+    # Remove tv shows from 'known_for' list
+    for person in result['results']:
+        person['known_for'][:] = [
+            x for x in person['known_for'] if x['media_type'] == 'movie']
+
+    return result
 
 
 def get_genre(id, name='', page=1):

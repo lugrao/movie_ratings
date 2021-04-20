@@ -6,14 +6,6 @@ Movie Ratings{% if movie %} | {{ movie['title'] }} ({{ movie['year'] }})
 {% endblock%}
 
 {% block main %}
-<div class="container">
-    <form class="search-small" action="/search" method="GET" autocomplete="off">
-        <input type="text" name="t" placeholder="Title">
-        <input type="number" name="y" placeholder="Year (optional)">
-        <input type="submit" value="Search" class="clickable">
-    </form>
-</div>
-
 <div class="container" id="movie" data-title="{{ movie['title'] }}" data-year="{{ movie['year'] }}"
     data-tmdbid="{{ movie['tmdb-id'] }}">
     {% if movie %}
