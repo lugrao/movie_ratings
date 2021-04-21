@@ -23,6 +23,8 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
     credits = movie_result.credits()
     omdb = get_omdb_data(movie['imdb_id'])
 
+    year = f'{movie["release_date"][:4]}' if movie['release_date'] else ''
+
     direction = [{'name': i['name'], 'job': i['job'], 'id': i['id']}
                  for i in credits['crew'] if i['job'] == 'Director']
     if not direction:
@@ -45,9 +47,22 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
     if movie['imdb_id']:
         imdb_url = 'https://www.imdb.com/title/' + movie['imdb_id']
 
+    rotten_tomatoes_rating = omdb['rotten_tomatoes_rating']
+    rotten_tomatoes_url = f'https://www.rottentomatoes.com/search?search={movie["title"]}'
+    if rotten_tomatoes_rating == ['Not available', -1]:
+        rotten_tomatoes = get_rottentomatoes_rating(movie['title'], year)
+        rotten_tomatoes_rating = rotten_tomatoes['rating']
+        try:
+            rotten_tomatoes_rating = [
+                f'{rotten_tomatoes_rating}%', float(rotten_tomatoes_rating) / 10]
+        except:
+            rotten_tomatoes_rating = ['Not available', -1]
+        if rotten_tomatoes['url']:
+            rotten_tomatoes_url = rotten_tomatoes['url']
+
     movie_data = {
         'title': movie['title'],
-        'year': f'({movie["release_date"][:4]})' if movie['release_date'] else '',
+        'year': f'({year})',
         'runtime': f'{movie["runtime"]} mins' if movie['runtime'] else '',
         'overview': movie['overview'],
         'direction': direction,
@@ -58,8 +73,8 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
         'imdb-id': movie['imdb_id'],
         'imdb-rating': omdb['imdb_rating'],
         'imdb-url': imdb_url,
-        'rotten-tomatoes-rating': omdb['rotten_tomatoes_rating'],
-        'rotten-tomatoes-url': f'https://www.rottentomatoes.com/search?search={movie["title"]}',
+        'rotten-tomatoes-rating': rotten_tomatoes_rating,
+        'rotten-tomatoes-url': rotten_tomatoes_url,
         'metacritic-rating': omdb['metacritic_rating'],
         'metacritic-url': f'https://www.metacritic.com/search/movie/{movie["title"]}/results',
         'tmdb-id': id,
@@ -190,6 +205,8 @@ def get_omdb_data(imdb_id):
 
 def get_letterboxd_rating(tmdb_id, title='', year=''):
 
+    movie_url = None
+
     try:
         search_res = requests.get(f'https://letterboxd.com/tmdb/{tmdb_id}')
         search_soup = BeautifulSoup(search_res.text, 'html.parser')
@@ -204,6 +221,49 @@ def get_letterboxd_rating(tmdb_id, title='', year=''):
         if movie_url:
             url = movie_url
         return ['Not available', -1], url
+
+
+def get_rottentomatoes_rating(title, year):
+    score = None
+    movie_url = None
+
+    if not year:
+        return {'rating': score, 'url': movie_url}
+
+    req_count = 0
+    while req_count < 3:
+        next_page = ''
+        url = f'https://www.rottentomatoes.com/napi/search/all?type=movie&searchQuery={title}&after={next_page}'
+
+        try:
+            res = requests.get(url)
+            data = res.json()
+            req_count += 1
+        except:
+            return {'rating': score, 'url': movie_url}
+
+        if not data['movies']['items']:
+            break
+
+        for movie in data['movies']['items']:
+            try:
+                if movie['name'] == title and movie['releaseYear'] == year:
+                    if movie['tomatometerScore']:
+                        score = movie['tomatometerScore']['score']
+                    if movie['url']:
+                        movie_url = movie['url']
+                    break
+            except:
+                continue
+
+        if not data['movies']['pageInfo']['endCursor']:
+            break
+        next_page = data['movies']['pageInfo']['endCursor']
+
+        if score or movie_url:
+            break
+
+    return {'rating': score, 'url': movie_url}
 
 
 def get_person(id='', query='', page=1):

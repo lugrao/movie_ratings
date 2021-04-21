@@ -31,9 +31,10 @@ def search_title():
 def search_person():
     name = request.args.get('n')
     if not name:
-        return 'You must provide a name.'        
+        return 'You must provide a name.'
     result = get_person(query=name)
     return render_template('person.html', search_result=result, query=name, info='')
+
 
 @app.route('/movie/<id>')
 def movie(id):
@@ -72,10 +73,12 @@ def more_results():
     more_results = get_more_movies(title, year, id, page)
     return more_results
 
+
 @app.route('/more-person-results/<query>/<page>')
 def more_person_results(query, page):
     response = get_person(query=query, page=page)
     return response
+
 
 @app.route('/more-genre-results/<id>/<page>')
 def more_genre_results(id, page):
