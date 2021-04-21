@@ -9,7 +9,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/search')
+@app.route('/search/movie/')
 def search_title():
     title = request.args.get('t').strip()
     if not title:
@@ -35,13 +35,13 @@ def search_person():
     result = get_person(query=name)
     return render_template('person.html', search_result=result, query=name, info='')
 
-@app.route('/movie/<id>/')
+@app.route('/movie/<id>')
 def movie(id):
     movie, more_results = get_movie(tmdb_id=id)
     return render_template('movie.html', title='', year='', id=id, movie=movie, more_results=more_results)
 
 
-@app.route('/person/<id>/')
+@app.route('/person/<id>')
 def person(id):
     info, jobs = get_person(id)
     return render_template('person.html', info=info, jobs=jobs)
@@ -53,7 +53,7 @@ def genre(id, name):
     return render_template('genre.html', movies=movies)
 
 
-@app.route('/letterboxd-rating')
+@app.route('/letterboxd-rating/')
 def letterboxd_rating():
     imdb_id = request.args.get('id')
     title = request.args.get('t')
@@ -63,7 +63,7 @@ def letterboxd_rating():
     return response
 
 
-@app.route('/more-results')
+@app.route('/more-movie-results/')
 def more_results():
     title = request.args.get('t')
     year = request.args.get('y')

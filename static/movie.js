@@ -31,7 +31,7 @@ async function getLetterboxdRating() {
     let year = $movie.dataset.year;
     let $checkbox = document.getElementsByName('letterboxd-rating')[0];
     let $label = $checkbox.previousElementSibling;
-    let url = `/letterboxd-rating?id=${tmdbID}&t=${title}&y=${year}`;
+    let url = `/letterboxd-rating/?id=${tmdbID}&t=${title}&y=${year}`;
     let response;
 
     if (!storage.getItem(current_url)) {
@@ -79,7 +79,7 @@ async function getLetterboxdRating() {
 
 
 async function loadMoreResults() {
-    let url = `/more-results?t=${title}&y=${year}&id=${id}&p=${page}`;
+    let url = `/more-movie-results/?t=${title}&y=${year}&id=${id}&p=${page}`;
     let response;
     let $li = document.querySelectorAll('li');
     let scrollItem = $li[$li.length - 1];
