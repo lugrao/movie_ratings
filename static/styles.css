@@ -13,6 +13,10 @@ main {
     margin-bottom: 50px;
 }
 
+h1, h2 {
+    text-align: center;
+}
+
 nav {
     top: 0;
     color: white;
@@ -164,15 +168,6 @@ hr {
     font-weight: bold;
 }
 
-#search-person > input:nth-child(1) {
-    grid-area: 1 / 1 / 1 / span 2;
-    width: 94.5%;
-}
-
-#search-movie {
-    grid-template-columns: 1.3fr 0.8fr 0.5fr;
-}
-
 .checkbox {
     margin-top: 15px;
     clear: left;
@@ -221,6 +216,16 @@ hr {
 
 #select-search {
     text-align: center;
+}
+
+
+#search-person > input:nth-child(1) {
+    grid-area: 1 / 1 / 1 / span 2;
+    width: 94.5%;
+}
+
+#search-movie {
+    grid-template-columns: 1.3fr 0.8fr 0.5fr;
 }
 
 
