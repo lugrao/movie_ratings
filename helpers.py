@@ -60,6 +60,19 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
         if rotten_tomatoes['url']:
             rotten_tomatoes_url = rotten_tomatoes['url']
 
+    metacritic_rating = omdb['metacritic_rating']
+    metacritic_url = f'https://www.metacritic.com/search/movie/{movie["title"]}/results'
+    if metacritic_rating == ['Not available', -1]:
+        metacritic = get_metacritic_rating(movie['title'], year)
+        metacritic_rating = metacritic['rating']
+        try:
+            metacritic_rating = [
+                f'{metacritic_rating}/100', float(metacritic_rating) / 10]
+        except:
+            metacritic_rating = ['Not available', -1]
+        if metacritic['url']:
+            metacritic_url = metacritic['url']
+
     movie_data = {
         'title': movie['title'],
         'year': f'({year})',
@@ -75,8 +88,8 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
         'imdb-url': imdb_url,
         'rotten-tomatoes-rating': rotten_tomatoes_rating,
         'rotten-tomatoes-url': rotten_tomatoes_url,
-        'metacritic-rating': omdb['metacritic_rating'],
-        'metacritic-url': f'https://www.metacritic.com/search/movie/{movie["title"]}/results',
+        'metacritic-rating': metacritic_rating,
+        'metacritic-url': metacritic_url,
         'tmdb-id': id,
         'tmdb-rating': [str(movie['vote_average']) + '/10', float(movie['vote_average'])] if movie['vote_count'] > 0 else ['Not available', -1],
         'tmdb-url': f'https://www.themoviedb.org/movie/{movie["id"]}'
@@ -203,69 +216,6 @@ def get_omdb_data(imdb_id):
     }
 
 
-def get_letterboxd_rating(tmdb_id, title='', year=''):
-
-    movie_url = None
-
-    try:
-        search_res = requests.get(f'https://letterboxd.com/tmdb/{tmdb_id}')
-        search_soup = BeautifulSoup(search_res.text, 'html.parser')
-        movie_url = search_soup.find_all(
-            attrs={'name': 'twitter:url'})[0]['content']
-        movie_rating = round(float(search_soup.find_all(
-            attrs={'name': 'twitter:data2'})[0]['content'].split()[0]), 1)
-
-        return [str(movie_rating) + '/5', movie_rating * 2], movie_url
-    except:
-        url = f'https://letterboxd.com/search/{title} {year}'
-        if movie_url:
-            url = movie_url
-        return ['Not available', -1], url
-
-
-def get_rottentomatoes_rating(title, year):
-    score = None
-    movie_url = None
-
-    if not year:
-        return {'rating': score, 'url': movie_url}
-
-    req_count = 0
-    while req_count < 3:
-        next_page = ''
-        url = f'https://www.rottentomatoes.com/napi/search/all?type=movie&searchQuery={title}&after={next_page}'
-
-        try:
-            res = requests.get(url)
-            data = res.json()
-            req_count += 1
-        except:
-            return {'rating': score, 'url': movie_url}
-
-        if not data['movies']['items']:
-            break
-
-        for movie in data['movies']['items']:
-            try:
-                if movie['name'] == title and movie['releaseYear'] == year:
-                    if movie['tomatometerScore']:
-                        score = movie['tomatometerScore']['score']
-                    if movie['url']:
-                        movie_url = movie['url']
-                    break
-            except:
-                continue
-
-        if not data['movies']['pageInfo']['endCursor']:
-            break
-        next_page = data['movies']['pageInfo']['endCursor']
-
-        if score or movie_url:
-            break
-
-    return {'rating': score, 'url': movie_url}
-
-
 def get_person(id='', query='', page=1):
     tmdb.API_KEY = os.environ.get('TMDB_KEY')
 
@@ -344,3 +294,96 @@ def get_genre(id, name='', page=1):
     }
 
     return movies_data
+
+
+def get_letterboxd_rating(tmdb_id, title='', year=''):
+
+    movie_url = None
+
+    try:
+        search_res = requests.get(f'https://letterboxd.com/tmdb/{tmdb_id}')
+        search_soup = BeautifulSoup(search_res.text, 'html.parser')
+        movie_url = search_soup.find_all(
+            attrs={'name': 'twitter:url'})[0]['content']
+        movie_rating = round(float(search_soup.find_all(
+            attrs={'name': 'twitter:data2'})[0]['content'].split()[0]), 1)
+
+        return [str(movie_rating) + '/5', movie_rating * 2], movie_url
+    except:
+        url = f'https://letterboxd.com/search/{title} {year}'
+        if movie_url:
+            url = movie_url
+        return ['Not available', -1], url
+
+
+def get_rottentomatoes_rating(title, year):
+    score = None
+    movie_url = None
+
+    if not year:
+        return {'rating': score, 'url': movie_url}
+
+    req_count = 0
+    while req_count < 3:
+        next_page = ''
+        url = f'https://www.rottentomatoes.com/napi/search/all?type=movie&searchQuery={title}&after={next_page}'
+
+        try:
+            res = requests.get(url)
+            data = res.json()
+            req_count += 1
+        except:
+            return {'rating': score, 'url': movie_url}
+
+        if not data['movies']['items']:
+            break
+
+        for movie in data['movies']['items']:
+            try:
+                if movie['name'] == title and movie['releaseYear'] == year:
+                    if movie['tomatometerScore']:
+                        score = movie['tomatometerScore']['score']
+                    if movie['url']:
+                        movie_url = movie['url']
+                    break
+            except:
+                continue
+
+        if not data['movies']['pageInfo']['endCursor']:
+            break
+        next_page = data['movies']['pageInfo']['endCursor']
+
+        if score or movie_url:
+            break
+
+    return {'rating': score, 'url': movie_url}
+
+
+def get_metacritic_rating(title, year):
+    rating = None
+    movie_url = None
+
+    if not year:
+        return {'rating': rating, 'url': movie_url}
+
+    user_agent = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.37'
+    url = f'https://www.metacritic.com/search/movie/{title}/results'
+
+    try:
+        res = requests.get(url, headers={'User-Agent': user_agent})
+        soup = BeautifulSoup(res.text, 'html.parser')
+        results = soup.find_all('div', class_='result_wrap')
+    except:
+        return {'rating': rating, 'url': movie_url}
+
+    for movie in results:
+        t = movie.a.text.strip()
+        y = movie.p.text.strip()[-4:]
+        if t == title and y == year:
+            rating = movie.span.text
+            movie_url = 'https://www.metacritic.com' + results[0].a.get('href')
+            print(rating)
+            print(movie_url)
+            break
+
+    return {'rating': rating, 'url': movie_url}
