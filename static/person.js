@@ -42,7 +42,8 @@ async function loadMoreResults() {
     let url = `/more-person-results/${query}/${page}`;
     let response;
     let $li = document.querySelectorAll('li');
-    let scrollItem = $li[$li.length - 2];
+    let scrollItem = $li[$li.length - 1];
+    console.log(scrollItem)
 
     try {
         response = await fetch(url).then(res => res.json()).then(data => data);
