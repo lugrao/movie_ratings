@@ -65,8 +65,9 @@ async function loadMoreResults() {
         new_person.innerHTML = `
         <hr>
         <li class="person-info">
+            <a href="/person/${person['id']}">
             <img src="${imgPath}" alt="${person['name']}">
-            <a href="/person/${person['id']}">${person['name']}</a> - ${person['known_for_department']}
+            ${person['name']}</a> - ${person['known_for_department']}
             <br>
             <br>
             <p>

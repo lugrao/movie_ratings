@@ -16,13 +16,14 @@ Movie Ratings
         {% if person != search_result['results'][0] %}
         <hr>{% endif %}
         <li class="person-info">
+            <a href="/person/{{ person['id'] }}">
             {% if person['profile_path'] %}
             <img src="https://www.themoviedb.org/t/p/w180_and_h180_face/{{ person['profile_path'] }}"
                 alt="{{ person['name'] }}">
             {% else %}
             <img src="{{ url_for('static', filename='blank_profile_pic.png') }}" alt="{{ person['name'] }}">
             {% endif %}
-            <a href="/person/{{ person['id'] }}">{{ person['name'] }}</a> - {{ person['known_for_department'] }}
+            {{ person['name'] }}</a> - {{ person['known_for_department'] }}
             <br>
             <br>
             {% if person['known_for'] %}

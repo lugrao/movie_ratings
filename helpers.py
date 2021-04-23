@@ -297,7 +297,6 @@ def get_genre(id, name='', page=1):
 
 
 def get_letterboxd_rating(tmdb_id, title='', year=''):
-
     movie_url = None
 
     try:
@@ -317,11 +316,11 @@ def get_letterboxd_rating(tmdb_id, title='', year=''):
 
 
 def get_rottentomatoes_rating(title, year):
-    score = None
+    rating = None
     movie_url = None
 
     if not year:
-        return {'rating': score, 'url': movie_url}
+        return {'rating': rating, 'url': movie_url}
 
     req_count = 0
     while req_count < 3:
@@ -333,7 +332,7 @@ def get_rottentomatoes_rating(title, year):
             data = res.json()
             req_count += 1
         except:
-            return {'rating': score, 'url': movie_url}
+            return {'rating': rating, 'url': movie_url}
 
         if not data['movies']['items']:
             break
@@ -342,7 +341,7 @@ def get_rottentomatoes_rating(title, year):
             try:
                 if movie['name'] == title and movie['releaseYear'] == year:
                     if movie['tomatometerScore']:
-                        score = movie['tomatometerScore']['score']
+                        rating = movie['tomatometerScore']['score']
                     if movie['url']:
                         movie_url = movie['url']
                     break
@@ -353,10 +352,10 @@ def get_rottentomatoes_rating(title, year):
             break
         next_page = data['movies']['pageInfo']['endCursor']
 
-        if score or movie_url:
+        if rating or movie_url:
             break
 
-    return {'rating': score, 'url': movie_url}
+    return {'rating': rating, 'url': movie_url}
 
 
 def get_metacritic_rating(title, year):
@@ -381,9 +380,7 @@ def get_metacritic_rating(title, year):
         y = movie.p.text.strip()[-4:]
         if t == title and y == year:
             rating = movie.span.text
-            movie_url = 'https://www.metacritic.com' + results[0].a.get('href')
-            print(rating)
-            print(movie_url)
+            movie_url = f'https://www.metacritic.com{results[0].a.get("href")}'
             break
 
     return {'rating': rating, 'url': movie_url}
