@@ -91,6 +91,12 @@ Movie Ratings{% if movie %} | {{ movie['title'] }} ({{ movie['year'] }})
             <input class="clickable" type="checkbox" checked="true" name="tmdb-rating"
                 data-rating="{{ movie['tmdb-rating'][1] }}" />
         </div>
+        <div>
+            <label for="filmaffinity-rating"><a href="{{ movie['filmaffinity-url'] }}" target="_blank">FilmAffinity</a> rating: {{
+                movie['filmaffinity-rating'][0] }}</label>
+            <input class="clickable" type="checkbox" checked="true" name="filmaffinity-rating"
+                data-rating="{{ movie['filmaffinity-rating'][1] }}" />
+        </div>
     </div>
 
     <div class="average-rating">
