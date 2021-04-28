@@ -438,7 +438,7 @@ def get_filmaffinity_rating(title, original_title, year):
             ot = clean(soup.find_all('dl', class_='movie-info')
                        [0].dd.text.strip())
             y = soup.find_all('dd', {'itemprop': 'datePublished'})[0].text
-            if year == y and (t == query or ot == query or t == original_title or ot == original_title):
+            if year == y and (t in [query, original_title] or ot in [query, original_title]):
                 rating = soup.find_all(
                     'div', {'id': 'movie-rat-avg'})[0].text.strip()
                 movie_url = soup.find_all('link', {'rel': 'canonical'})[
