@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-Movie Ratings{% if movie %} | {{ movie['title'] }} {{ movie['year'] }}
+Movie Ratings{% if movie %} | {{ movie['title'] }} {{ '(' + movie['year'] + ')' if movie['year'] else '' }}
 {% endif %}
 {% endblock%}
 
@@ -9,7 +9,7 @@ Movie Ratings{% if movie %} | {{ movie['title'] }} {{ movie['year'] }}
 <div class="container" id="movie" data-title="{{ movie['title'] }}" data-originaltitle="{{ movie['original_title'] }}" data-year="{{ movie['year'] }}"
     data-tmdbid="{{ movie['tmdb-id'] }}">
     {% if movie %}
-    <h1>{{ movie['title'] }} {{ movie['year'] }}</h1>
+    <h1>{{ movie['title'] }} {{ '(' + movie['year'] + ')' if movie['year'] else '' }}</h1>
 
     <div class="movie-info">
         {% if movie['poster_path'] %}
