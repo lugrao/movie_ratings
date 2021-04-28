@@ -50,38 +50,39 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
 
     rotten_tomatoes_rating = omdb['rotten_tomatoes_rating']
     rotten_tomatoes_url = f'https://www.rottentomatoes.com/search?search={movie["title"]}'
-    if rotten_tomatoes_rating == ['Not available', -1]:
+    if rotten_tomatoes_rating == ['Not found', -1]:
         rotten_tomatoes = get_rottentomatoes_rating(movie['title'], year)
         rotten_tomatoes_rating = rotten_tomatoes['rating']
         try:
             rotten_tomatoes_rating = [
                 f'{rotten_tomatoes_rating}%', float(rotten_tomatoes_rating) / 10]
         except:
-            rotten_tomatoes_rating = ['Not available', -1]
+            rotten_tomatoes_rating = ['Not found', -1]
         if rotten_tomatoes['url']:
             rotten_tomatoes_url = rotten_tomatoes['url']
 
     metacritic_rating = omdb['metacritic_rating']
     metacritic_url = f'https://www.metacritic.com/search/movie/{movie["title"]}/results'
-    if metacritic_rating == ['Not available', -1]:
+    if metacritic_rating == ['Not found', -1]:
         metacritic = get_metacritic_rating(movie['title'], year)
         metacritic_rating = metacritic['rating']
         try:
             metacritic_rating = [
                 f'{metacritic_rating}/100', float(metacritic_rating) / 10]
         except:
-            metacritic_rating = ['Not available', -1]
+            metacritic_rating = ['Not found', -1]
         if metacritic['url']:
             metacritic_url = metacritic['url']
 
-    filmaffinity = get_filmaffinity_rating(movie['title'], year)
+    filmaffinity = get_filmaffinity_rating(
+        movie['title'], movie['original_title'], year)
     filmaffinity_rating = filmaffinity['rating']
     filmaffinity_url = filmaffinity['url']
     try:
         filmaffinity_rating = [
             f'{filmaffinity_rating}/10', float(filmaffinity_rating)]
     except:
-        filmaffinity_rating = ['Not available', -1]
+        filmaffinity_rating = ['Not found', -1]
     if not filmaffinity_url:
         filmaffinity_url = f'https://www.filmaffinity.com/en/search.php?stype=title&stext={movie["title"]}'
 
@@ -103,7 +104,7 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
         'metacritic-rating': metacritic_rating,
         'metacritic-url': metacritic_url,
         'tmdb-id': id,
-        'tmdb-rating': [str(movie['vote_average']) + '/10', float(movie['vote_average'])] if movie['vote_count'] > 0 else ['Not available', -1],
+        'tmdb-rating': [str(movie['vote_average']) + '/10', float(movie['vote_average'])] if movie['vote_count'] > 0 else ['Not found', -1],
         'tmdb-url': f'https://www.themoviedb.org/movie/{movie["id"]}',
         'filmaffinity-rating': filmaffinity_rating,
         'filmaffinity-url': filmaffinity_url
@@ -199,19 +200,19 @@ def get_omdb_data(imdb_id):
         imdb = movie['Ratings'][0]['Value']
         imdb = [imdb, float(imdb.split('/')[0])]
     except (IndexError, ValueError, KeyError):
-        imdb = ['Not available', -1]
+        imdb = ['Not found', -1]
 
     try:
         rotten_tomatoes = movie['Ratings'][1]['Value']
         rotten_tomatoes = [rotten_tomatoes, float(rotten_tomatoes[:-1]) / 10]
     except (IndexError, ValueError, KeyError):
-        rotten_tomatoes = ['Not available', -1]
+        rotten_tomatoes = ['Not found', -1]
 
     try:
         metacritic = movie['Ratings'][2]['Value']
         metacritic = [metacritic, float(metacritic.split('/')[0]) / 10]
     except (IndexError, ValueError, KeyError):
-        metacritic = ['Not available', -1]
+        metacritic = ['Not found', -1]
 
     try:
         poster = movie['Poster']
@@ -326,7 +327,7 @@ def get_letterboxd_rating(tmdb_id, title='', year=''):
         url = f'https://letterboxd.com/search/{title} {year}'
         if movie_url:
             url = movie_url
-        return ['Not available', -1], url
+        return ['Not found', -1], url
 
 
 def get_rottentomatoes_rating(title, year):
@@ -400,7 +401,7 @@ def get_metacritic_rating(title, year):
     return {'rating': rating, 'url': movie_url}
 
 
-def get_filmaffinity_rating(title, year):
+def get_filmaffinity_rating(title, original_title, year):
     def clean(title):
         title = title.lower().replace('the', '').strip()
         title = re.sub(r'[\(\[].*?[\)\]]|[^a-z0-9]', '', title)
@@ -409,6 +410,7 @@ def get_filmaffinity_rating(title, year):
     rating = None
     movie_url = None
     query = clean(title)
+    original_title = clean(original_title)
     url = f'https://www.filmaffinity.com/en/search.php?stype=title&stext={title}'
 
     try:
@@ -424,7 +426,7 @@ def get_filmaffinity_rating(title, year):
             for movie in results:
                 t = clean(movie.find_all('a')[1].get('title').strip())
                 y = movie.find('div', class_='ye-w').text
-                if t == query and y == year:
+                if (t == query or t == original_title) and y == year:
                     rating = movie.find('div', class_='avgrat-box').text
                     movie_url = movie.a.get('href')
                     break
@@ -436,7 +438,7 @@ def get_filmaffinity_rating(title, year):
             ot = clean(soup.find_all('dl', class_='movie-info')
                        [0].dd.text.strip())
             y = soup.find_all('dd', {'itemprop': 'datePublished'})[0].text
-            if year == y and (t == query or ot == query):
+            if year == y and (t == query or ot == query or t == original_title or ot == original_title):
                 rating = soup.find_all(
                     'div', {'id': 'movie-rat-avg'})[0].text.strip()
                 movie_url = soup.find_all('link', {'rel': 'canonical'})[
