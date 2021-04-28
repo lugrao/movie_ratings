@@ -61,34 +61,10 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
         if rotten_tomatoes['url']:
             rotten_tomatoes_url = rotten_tomatoes['url']
 
-    metacritic_rating = omdb['metacritic_rating']
-    metacritic_url = f'https://www.metacritic.com/search/movie/{movie["title"]}/results'
-    if metacritic_rating == ['Not found', -1]:
-        metacritic = get_metacritic_rating(movie['title'], year)
-        metacritic_rating = metacritic['rating']
-        try:
-            metacritic_rating = [
-                f'{metacritic_rating}/100', float(metacritic_rating) / 10]
-        except:
-            metacritic_rating = ['Not found', -1]
-        if metacritic['url']:
-            metacritic_url = metacritic['url']
-
-    filmaffinity = get_filmaffinity_rating(
-        movie['title'], movie['original_title'], year)
-    filmaffinity_rating = filmaffinity['rating']
-    filmaffinity_url = filmaffinity['url']
-    try:
-        filmaffinity_rating = [
-            f'{filmaffinity_rating}/10', float(filmaffinity_rating)]
-    except:
-        filmaffinity_rating = ['Not found', -1]
-    if not filmaffinity_url:
-        filmaffinity_url = f'https://www.filmaffinity.com/en/search.php?stype=title&stext={movie["title"]}'
-
     movie_data = {
         'title': movie['title'],
-        'year': f'({year})' if year else '',
+        'original_title': movie['original_title'],
+        'year': year,
         'runtime': f'{movie["runtime"]} mins' if movie['runtime'] else '',
         'overview': movie['overview'],
         'direction': direction,
@@ -101,13 +77,11 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
         'imdb-url': imdb_url,
         'rotten-tomatoes-rating': rotten_tomatoes_rating,
         'rotten-tomatoes-url': rotten_tomatoes_url,
-        'metacritic-rating': metacritic_rating,
-        'metacritic-url': metacritic_url,
+        'metacritic-rating': omdb['metacritic_rating'],
+        'metacritic-url': f'https://www.metacritic.com/search/movie/{movie["title"]}/results',
         'tmdb-id': id,
         'tmdb-rating': [str(movie['vote_average']) + '/10', float(movie['vote_average'])] if movie['vote_count'] > 0 else ['Not found', -1],
-        'tmdb-url': f'https://www.themoviedb.org/movie/{movie["id"]}',
-        'filmaffinity-rating': filmaffinity_rating,
-        'filmaffinity-url': filmaffinity_url
+        'tmdb-url': f'https://www.themoviedb.org/movie/{movie["id"]}'
     }
 
     more_results = {'movies': [], 'total_pages': 1}
@@ -388,7 +362,7 @@ def get_metacritic_rating(title, year):
         soup = BeautifulSoup(res.text, 'html.parser')
         results = soup.find_all('div', class_='result_wrap')
     except:
-        return {'rating': rating, 'url': movie_url}
+        return ['No found', -1], url
 
     for movie in results:
         t = movie.a.text.strip()
@@ -398,7 +372,10 @@ def get_metacritic_rating(title, year):
             movie_url = f'https://www.metacritic.com{results[0].a.get("href")}'
             break
 
-    return {'rating': rating, 'url': movie_url}
+    try:
+        return [f'{rating}/100', float(rating) / 10], movie_url
+    except:
+        return ['Not found', -1], url
 
 
 def get_filmaffinity_rating(title, original_title, year):
@@ -407,17 +384,17 @@ def get_filmaffinity_rating(title, original_title, year):
         title = re.sub(r'[\(\[].*?[\)\]]|[^a-z0-9]', '', title)
         return title
 
+    url = f'https://www.filmaffinity.com/en/search.php?stype=title&stext={title}'
     rating = None
     movie_url = None
-    query = clean(title)
+    title = clean(title)
     original_title = clean(original_title)
-    url = f'https://www.filmaffinity.com/en/search.php?stype=title&stext={title}'
 
     try:
         res = requests.get(url)
         soup = BeautifulSoup(res.text, 'html.parser')
     except:
-        return {'rating': rating, 'url': movie_url}
+        return ['Not found', -1], url
 
     results = soup.find_all('div', class_='se-it mt')
 
@@ -426,7 +403,7 @@ def get_filmaffinity_rating(title, original_title, year):
             for movie in results:
                 t = clean(movie.find_all('a')[1].get('title').strip())
                 y = movie.find('div', class_='ye-w').text
-                if (t == query or t == original_title) and y == year:
+                if (t == title or t == original_title) and y == year:
                     rating = movie.find('div', class_='avgrat-box').text
                     movie_url = movie.a.get('href')
                     break
@@ -438,7 +415,7 @@ def get_filmaffinity_rating(title, original_title, year):
             ot = clean(soup.find_all('dl', class_='movie-info')
                        [0].dd.text.strip())
             y = soup.find_all('dd', {'itemprop': 'datePublished'})[0].text
-            if year == y and (t in [query, original_title] or ot in [query, original_title]):
+            if year == y and (t in [title, original_title] or ot in [title, original_title]):
                 rating = soup.find_all(
                     'div', {'id': 'movie-rat-avg'})[0].text.strip()
                 movie_url = soup.find_all('link', {'rel': 'canonical'})[
@@ -446,4 +423,7 @@ def get_filmaffinity_rating(title, original_title, year):
         except:
             pass
 
-    return {'rating': rating, 'url': movie_url}
+    try:
+        return [f'{rating}/10', float(rating)], movie_url
+    except:
+        return ['Not found', -1], url

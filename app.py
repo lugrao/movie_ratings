@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
-from helpers import get_movie, get_letterboxd_rating, get_more_movies, get_person, get_genre
+from helpers import get_movie, get_more_movies, get_person, get_genre
+from helpers import get_letterboxd_rating, get_filmaffinity_rating, get_metacritic_rating
 
 app = Flask(__name__)
 
@@ -60,8 +61,24 @@ def letterboxd_rating():
     title = request.args.get('t')
     year = request.args.get('y')
     rating, url = get_letterboxd_rating(imdb_id, title, year)
-    response = {'rating': rating, 'url': url}
-    return response
+    return {'rating': rating, 'url': url}
+
+
+@app.route('/filmaffinity-rating/')
+def filmaffinity_rating():
+    title = request.args.get('t')
+    original_title = request.args.get('ot')
+    year = request.args.get('y')
+    rating, url = get_filmaffinity_rating(title, original_title, year)
+    return {'rating': rating, 'url': url}
+
+
+@app.route('/metacritic-rating/')
+def metacritic_rating():
+    title = request.args.get('t')
+    year = request.args.get('y')
+    rating, url = get_metacritic_rating(title, year)
+    return {'rating': rating, 'url': url}
 
 
 @app.route('/more-movie-results/')
@@ -76,11 +93,9 @@ def more_results():
 
 @app.route('/more-person-results/<query>/<page>')
 def more_person_results(query, page):
-    response = get_person(query=query, page=page)
-    return response
+    return get_person(query=query, page=page)
 
 
 @app.route('/more-genre-results/<id>/<page>')
 def more_genre_results(id, page):
-    response = get_genre(id, page=page)
-    return response
+    return get_genre(id, page=page)

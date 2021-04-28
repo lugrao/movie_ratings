@@ -1,12 +1,12 @@
 {% extends "layout.html" %}
 
 {% block title %}
-Movie Ratings{% if movie %} | {{ movie['title'] }} ({{ movie['year'] }})
+Movie Ratings{% if movie %} | {{ movie['title'] }} {{ movie['year'] }}
 {% endif %}
 {% endblock%}
 
 {% block main %}
-<div class="container" id="movie" data-title="{{ movie['title'] }}" data-year="{{ movie['year'] }}"
+<div class="container" id="movie" data-title="{{ movie['title'] }}" data-originaltitle="{{ movie['original_title'] }}" data-year="{{ movie['year'] }}"
     data-tmdbid="{{ movie['tmdb-id'] }}">
     {% if movie %}
     <h1>{{ movie['title'] }} {{ movie['year'] }}</h1>
@@ -64,21 +64,21 @@ Movie Ratings{% if movie %} | {{ movie['title'] }} ({{ movie['year'] }})
 
     <div class="checkbox">
         <div>
-            <label for="imdb"><a href="{{ movie['imdb-url'] }}" target="_blank">IMDb</a> rating: {{
+            <label for="imdb-rating"><a href="{{ movie['imdb-url'] }}" target="_blank">IMDb</a> rating: {{
                 movie['imdb-rating'][0] }}</label>
-            <input class="clickable" type="checkbox" checked="true" name="imdb"
+            <input class="clickable" type="checkbox" checked="true" name="imdb-rating"
                 data-rating="{{ movie['imdb-rating'][1] }}" />
         </div>
         <div>
-            <label for="rotten-tomatoes"><a href="{{ movie['rotten-tomatoes-url'] }}" target="_blank">Rotten
+            <label for="rotten-tomatoes-rating"><a href="{{ movie['rotten-tomatoes-url'] }}" target="_blank">Rotten
                     Tomatoes</a> rating: {{ movie['rotten-tomatoes-rating'][0] }}</label>
-            <input class="clickable" type="checkbox" checked="true" name="rotten-tomatoes"
+            <input class="clickable" type="checkbox" checked="true" name="rotten-tomatoes-rating"
                 data-rating="{{ movie['rotten-tomatoes-rating'][1] }}" />
         </div>
         <div>
-            <label for="metacritic"><a href="{{ movie['metacritic-url'] }}" target="_blank">Metacritic</a> rating: {{
+            <label for="metacritic-rating"><a href="{{ movie['metacritic-url'] }}" target="_blank">Metacritic</a> rating: {{
                 movie['metacritic-rating'][0] }}</label>
-            <input class="clickable" type="checkbox" checked="true" name="metacritic"
+            <input class="clickable" type="checkbox" checked="true" name="metacritic-rating"
                 data-rating="{{ movie['metacritic-rating'][1] }}" />
         </div>
         <div>
@@ -92,10 +92,8 @@ Movie Ratings{% if movie %} | {{ movie['title'] }} ({{ movie['year'] }})
                 data-rating="{{ movie['tmdb-rating'][1] }}" />
         </div>
         <div>
-            <label for="filmaffinity-rating"><a href="{{ movie['filmaffinity-url'] }}" target="_blank">FilmAffinity</a> rating: {{
-                movie['filmaffinity-rating'][0] }}</label>
-            <input class="clickable" type="checkbox" checked="true" name="filmaffinity-rating"
-                data-rating="{{ movie['filmaffinity-rating'][1] }}" />
+            <label for="filmaffinity-rating">FilmAffinity rating: <span>loading...</span></label>
+            <input class="clickable" type="checkbox" checked="true" name="filmaffinity-rating" data-rating="-1" />
         </div>
     </div>
 
