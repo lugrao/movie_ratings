@@ -4,17 +4,9 @@ let $loadMore = document.getElementById("load-more");
 let $moreResultsList = document.getElementById("more-results-list");
 let $inputs = document.querySelectorAll(".checkbox div input");
 let $averageRating = document.getElementById("average-rating");
-let title = null;
-let year = null;
-let id = null;
 let page = 2;
 
-if ($loadMore) {
-  title = $loadMore.dataset.title;
-  year = $loadMore.dataset.year;
-  id = $loadMore.dataset.id;
-  $loadMore.addEventListener("click", loadMoreResults);
-}
+if ($loadMore) $loadMore.addEventListener("click", loadMoreResults);
 
 $inputs.forEach((input) => {
   input.addEventListener("click", updateRating);
@@ -30,6 +22,7 @@ getRating("filmaffinity");
 if (metacritic.innerHTML.includes("loading")) getRating("metacritic");
 
 async function getRating(site) {
+  let isFirstVisit = false;
   let storageItem = current_url + " | " + site;
   let $movie = document.getElementById("movie");
   let tmdbID = $movie.dataset.tmdbid;
@@ -63,6 +56,7 @@ async function getRating(site) {
         .then((res) => res.json())
         .then((data) => data);
       storage.setItem(storageItem, JSON.stringify(response));
+      isFirstVisit = true;
     } catch (error) {
       $label.style.color = "black";
       $label.innerHTML = `${labelName} rating: <span style="color: crimson;">error</span>.`;
@@ -80,27 +74,26 @@ async function getRating(site) {
   $checkbox.className = "clickable";
 
   updateRating();
+  if (isFirstVisit) return;
 
-  if (storage.getItem(storageItem)) {
-    try {
-      response = await fetch(url + query)
-        .then((res) => res.json())
-        .then((data) => data);
-      stored_data = JSON.parse(storage.getItem(storageItem));
+  try {
+    response = await fetch(url + query)
+      .then((res) => res.json())
+      .then((data) => data);
+    stored_data = JSON.parse(storage.getItem(storageItem));
 
-      if (stored_data.rating[0] != response.rating[0]) {
-        storage.setItem(storageItem, JSON.stringify(response));
-        $label.innerHTML = `<a href="${response.url}" target="_blank">${labelName}</a> rating: ${response.rating[0]}`;
-        $label.style.color = "black";
-        $checkbox.dataset.rating = response.rating[1];
-        $checkbox.checked = true;
-        $checkbox.disabled = false;
-        $checkbox.className = "clickable";
-        updateRating();
-      }
-    } catch (error) {
-      return console.error(error);
+    if (stored_data.rating[0] != response.rating[0]) {
+      storage.setItem(storageItem, JSON.stringify(response));
+      $label.innerHTML = `<a href="${response.url}" target="_blank">${labelName}</a> rating: ${response.rating[0]}`;
+      $label.style.color = "black";
+      $checkbox.dataset.rating = response.rating[1];
+      $checkbox.checked = true;
+      $checkbox.disabled = false;
+      $checkbox.className = "clickable";
+      updateRating();
     }
+  } catch (error) {
+    return console.error(error);
   }
 }
 
@@ -136,6 +129,9 @@ function updateRating() {
 }
 
 async function loadMoreResults() {
+  let title = $loadMore.dataset.title;
+  let year = $loadMore.dataset.year;
+  let id = $loadMore.dataset.id;
   let url = `/more-movie-results/?t=${title}&y=${year}&id=${id}&p=${page}`;
   let response;
   let $li = document.querySelectorAll("li");
