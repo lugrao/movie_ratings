@@ -48,19 +48,6 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
     if movie['imdb_id']:
         imdb_url = 'https://www.imdb.com/title/' + movie['imdb_id']
 
-    # rotten_tomatoes_rating = omdb['rotten_tomatoes_rating']
-    # rotten_tomatoes_url = f'https://www.rottentomatoes.com/search?search={movie["title"]}'
-    # if rotten_tomatoes_rating == ['Not found', -1]:
-    #     rotten_tomatoes = get_rottentomatoes_rating(movie['title'], year)
-    #     rotten_tomatoes_rating = rotten_tomatoes['rating']
-    #     try:
-    #         rotten_tomatoes_rating = [
-    #             f'{rotten_tomatoes_rating}%', float(rotten_tomatoes_rating) / 10]
-    #     except:
-    #         rotten_tomatoes_rating = ['Not found', -1]
-    #     if rotten_tomatoes['url']:
-    #         rotten_tomatoes_url = rotten_tomatoes['url']
-
     movie_data = {
         'title': movie['title'],
         'original_title': movie['original_title'],
@@ -411,9 +398,17 @@ def get_filmaffinity_rating(title, original_title, year):
     else:
         try:
             t = clean(soup.find_all('h1', {'id': 'main-title'})[0].text)
-            ot = clean(soup.find_all('dl', class_='movie-info')[0].dd.contents[0])
+            ot = clean(soup.find_all('dl', class_='movie-info')
+                       [0].dd.contents[0])
             y = soup.find_all('dd', {'itemprop': 'datePublished'})[0].text
-            if year == y and (t in [title, original_title] or ot in [title, original_title]):
+            titles = [t, ot]
+            try:
+                for i in soup.find_all('dd', class_='akas')[0].ul.find_all('li'):
+                    titles.append(clean(i.text))
+            except:
+                pass
+
+            if year == y and (title in titles or original_title in titles):
                 rating = soup.find_all(
                     'div', {'id': 'movie-rat-avg'})[0].text.strip()
                 movie_url = soup.find_all('link', {'rel': 'canonical'})[
