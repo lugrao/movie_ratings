@@ -87,8 +87,7 @@ def more_results():
     year = request.args.get('y')
     id = request.args.get('id')
     page = int(request.args.get('p'))
-    more_results = get_more_movies(title, year, id, page)
-    return more_results
+    return get_more_movies(title, year, id, page)
 
 
 @app.route('/more-person-results/<query>/<page>')
