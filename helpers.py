@@ -292,11 +292,11 @@ def get_letterboxd_rating(tmdb_id, title='', year=''):
 
 
 def get_rottentomatoes_rating(title, year):
-    rating = None
-    movie_url = None
+    rating = ['Not found', -1]
+    movie_url = f'https://www.rottentomatoes.com/search?search={title}'
 
     if not year:
-        return {'rating': rating, 'url': movie_url}
+        return rating, movie_url
 
     req_count = 0
     while req_count < 3:
@@ -308,7 +308,7 @@ def get_rottentomatoes_rating(title, year):
             data = res.json()
             req_count += 1
         except:
-            return {'rating': rating, 'url': movie_url}
+            return rating, movie_url
 
         if not data['movies']['items']:
             break
@@ -318,6 +318,7 @@ def get_rottentomatoes_rating(title, year):
                 if movie['name'] == title and movie['releaseYear'] == year:
                     if movie['tomatometerScore']:
                         rating = movie['tomatometerScore']['score']
+                        rating = [f'{rating}%', float(rating) / 10]
                     if movie['url']:
                         movie_url = movie['url']
                     break
@@ -331,18 +332,17 @@ def get_rottentomatoes_rating(title, year):
         if rating or movie_url:
             break
 
-    return {'rating': rating, 'url': movie_url}
+    return rating, movie_url
 
 
 def get_metacritic_rating(title, year):
+    url = f'https://www.metacritic.com/search/movie/{title}/results'
     rating = None
     movie_url = None
+    user_agent = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.37'
 
     if not year:
-        return {'rating': rating, 'url': movie_url}
-
-    user_agent = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.37'
-    url = f'https://www.metacritic.com/search/movie/{title}/results'
+        return ['No found', -1], url
 
     try:
         res = requests.get(url, headers={'User-Agent': user_agent})

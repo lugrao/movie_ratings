@@ -1,5 +1,5 @@
 let storage = window.localStorage;
-let movieId = document.querySelector('#movie').dataset.tmdbid;
+let movieId = document.querySelector("#movie").dataset.tmdbid;
 let $loadMore = document.getElementById("load-more");
 let $moreResultsList = document.getElementById("more-results-list");
 let $inputs = document.querySelectorAll(".checkbox div input");
@@ -16,10 +16,15 @@ let metacritic = document.querySelector('[for="metacritic-rating"]');
 if (metacritic.innerHTML.includes("Not found"))
   metacritic.innerHTML = "Metacritic rating: <span>loading...</span>";
 
+let rottenTomatoes = document.querySelector('[for="rotten-tomatoes-rating"]');
+if (rottenTomatoes.innerHTML.includes("Not found"))
+  rottenTomatoes.innerHTML = "Rotten Tomatoes rating: <span>loading...</span>";
+
 updateRating();
 getRating("letterboxd");
 getRating("filmaffinity");
 if (metacritic.innerHTML.includes("loading")) getRating("metacritic");
+if (rottenTomatoes.innerHTML.includes("loading")) getRating("rotten-tomatoes");
 
 async function getRating(site) {
   let isFirstVisit = false;
@@ -37,6 +42,14 @@ async function getRating(site) {
   let response;
 
   switch (site) {
+    case "rotten-tomatoes":
+      labelName = "Rotten Tomatoes";
+      query = `?t=${title}&y=${year}`;
+      break;
+    case "metacritic":
+      labelName = "Metacritic";
+      query = `?t=${title}&y=${year}`;
+      break;
     case "letterboxd":
       labelName = "Letterboxd";
       query = `?id=${tmdbID}&t=${title}&y=${year}`;
@@ -45,9 +58,6 @@ async function getRating(site) {
       labelName = "FilmAffinity";
       query = `?t=${title}&ot=${originalTitle}&y=${year}`;
       break;
-    case "metacritic":
-      labelName = "Metacritic";
-      query = `?t=${title}&y=${year}`;
   }
 
   if (!storage.getItem(storageItem)) {
@@ -65,7 +75,7 @@ async function getRating(site) {
   } else {
     response = JSON.parse(storage.getItem(storageItem));
   }
-
+  
   $label.innerHTML = `<a href="${response.url}" target="_blank">${labelName}</a> rating: ${response.rating[0]}`;
   $label.style.color = "black";
   $checkbox.dataset.rating = response.rating[1];
@@ -73,6 +83,7 @@ async function getRating(site) {
   $checkbox.disabled = false;
   $checkbox.className = "clickable";
 
+  if (site == "metacritic") console.log(response)
   updateRating();
   if (isFirstVisit) return;
 

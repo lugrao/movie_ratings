@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from helpers import get_movie, get_more_movies, get_person, get_genre
-from helpers import get_letterboxd_rating, get_filmaffinity_rating, get_metacritic_rating
+from helpers import get_rottentomatoes_rating, get_letterboxd_rating, get_filmaffinity_rating, get_metacritic_rating
 
 app = Flask(__name__)
 
@@ -59,7 +59,7 @@ def genre(id, name):
 def rotten_tomatoes_rating():
     title = request.args.get('t')
     year = request.args.get('y')
-    rating, url = get_rotten_tomatoes_rating(title, year)
+    rating, url = get_rottentomatoes_rating(title, year)
     return {'rating': rating, 'url': url}
 
 
