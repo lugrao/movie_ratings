@@ -1,5 +1,5 @@
 let storage = window.localStorage;
-let current_url = window.location.toString();
+let movieId = document.querySelector('#movie').dataset.tmdbid;
 let $loadMore = document.getElementById("load-more");
 let $moreResultsList = document.getElementById("more-results-list");
 let $inputs = document.querySelectorAll(".checkbox div input");
@@ -23,7 +23,7 @@ if (metacritic.innerHTML.includes("loading")) getRating("metacritic");
 
 async function getRating(site) {
   let isFirstVisit = false;
-  let storageItem = current_url + " | " + site;
+  let storageItem = `/movie/${movieId}/${site}`;
   let $movie = document.getElementById("movie");
   let tmdbID = $movie.dataset.tmdbid;
   let title = $movie.dataset.title;
