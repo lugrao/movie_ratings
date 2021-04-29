@@ -83,7 +83,6 @@ async function getRating(site) {
   $checkbox.disabled = false;
   $checkbox.className = "clickable";
 
-  if (site == "metacritic") console.log(response)
   updateRating();
   if (isFirstVisit) return;
 
