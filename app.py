@@ -55,12 +55,28 @@ def genre(id, name):
     return render_template('genre.html', movies=movies)
 
 
-@app.route('/letterboxd-rating/')
-def letterboxd_rating():
-    imdb_id = request.args.get('id')
+@app.route('/rotten-tomatoes-rating/')
+def rotten_tomatoes_rating():
     title = request.args.get('t')
     year = request.args.get('y')
-    rating, url = get_letterboxd_rating(imdb_id, title, year)
+    rating, url = get_rotten_tomatoes_rating(title, year)
+    return {'rating': rating, 'url': url}
+
+
+@app.route('/metacritic-rating/')
+def metacritic_rating():
+    title = request.args.get('t')
+    year = request.args.get('y')
+    rating, url = get_metacritic_rating(title, year)
+    return {'rating': rating, 'url': url}
+
+
+@app.route('/letterboxd-rating/')
+def letterboxd_rating():
+    tmdb_id = request.args.get('id')
+    title = request.args.get('t')
+    year = request.args.get('y')
+    rating, url = get_letterboxd_rating(tmdb_id, title, year)
     return {'rating': rating, 'url': url}
 
 
@@ -70,14 +86,6 @@ def filmaffinity_rating():
     original_title = request.args.get('ot')
     year = request.args.get('y')
     rating, url = get_filmaffinity_rating(title, original_title, year)
-    return {'rating': rating, 'url': url}
-
-
-@app.route('/metacritic-rating/')
-def metacritic_rating():
-    title = request.args.get('t')
-    year = request.args.get('y')
-    rating, url = get_metacritic_rating(title, year)
     return {'rating': rating, 'url': url}
 
 
