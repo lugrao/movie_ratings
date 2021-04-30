@@ -33,6 +33,7 @@ async function getRating(site) {
   let tmdbID = $movie.dataset.tmdbid;
   let title = $movie.dataset.title;
   let originalTitle = $movie.dataset.originaltitle;
+  let alternativeTitles = $movie.dataset.alternativetitles;
   let year = $movie.dataset.year;
   let $checkbox = document.getElementsByName(`${site}-rating`)[0];
   let $label = $checkbox.previousElementSibling;
@@ -56,7 +57,7 @@ async function getRating(site) {
       break;
     case "filmaffinity":
       labelName = "FilmAffinity";
-      query = `?t=${title}&ot=${originalTitle}&y=${year}`;
+      query = `?t=${title}&ot=${originalTitle}&at=${alternativeTitles}&y=${year}`;
       break;
   }
 
@@ -75,7 +76,7 @@ async function getRating(site) {
   } else {
     response = JSON.parse(storage.getItem(storageItem));
   }
-  
+
   $label.innerHTML = `<a href="${response.url}" target="_blank">${labelName}</a> rating: ${response.rating[0]}`;
   $label.style.color = "black";
   $checkbox.dataset.rating = response.rating[1];

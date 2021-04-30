@@ -51,6 +51,7 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
     movie_data = {
         'title': movie['title'],
         'original_title': movie['original_title'],
+        'alternative_titles': [i['title'] for i in movie_result.alternative_titles()['titles'] if i['iso_3166_1'] in ['GB', 'US']],
         'year': year,
         'runtime': f'{movie["runtime"]} mins' if movie['runtime'] else '',
         'overview': movie['overview'],
@@ -365,7 +366,7 @@ def get_metacritic_rating(title, year):
         return ['Not found', -1], url
 
 
-def get_filmaffinity_rating(title, original_title, year):
+def get_filmaffinity_rating(title, original_title, alternative_titles, year):
     def clean(title):
         title = title.lower().replace('the', '').strip()
         title = re.sub(r'[\(\[].*?[\)\]]|[^a-z0-9]', '', title)
@@ -387,9 +388,11 @@ def get_filmaffinity_rating(title, original_title, year):
     if results:
         try:
             for movie in results:
-                t = clean(movie.find_all('a')[1].get('title').strip())
+                t = movie.find_all('a')[1].get('title').strip()
                 y = movie.find('div', class_='ye-w').text
-                if (t == title or t == original_title) and y == year:
+                titles = [title, original_title]
+
+                if (clean(t) in titles or t in alternative_titles) and y == year:
                     rating = movie.find('div', class_='avgrat-box').text
                     movie_url = movie.a.get('href')
                     break
@@ -397,18 +400,18 @@ def get_filmaffinity_rating(title, original_title, year):
             pass
     else:
         try:
-            t = clean(soup.find_all('h1', {'id': 'main-title'})[0].text)
+            t = soup.find_all('h1', {'id': 'main-title'})[0].text
             ot = clean(soup.find_all('dl', class_='movie-info')
                        [0].dd.contents[0])
             y = soup.find_all('dd', {'itemprop': 'datePublished'})[0].text
-            titles = [t, ot]
+            titles = [clean(t), ot]
             try:
                 for i in soup.find_all('dd', class_='akas')[0].ul.find_all('li'):
                     titles.append(clean(i.text))
             except:
                 pass
 
-            if year == y and (title in titles or original_title in titles):
+            if year == y and (title in titles or original_title in titles or t in alternative_titles):
                 rating = soup.find_all(
                     'div', {'id': 'movie-rat-avg'})[0].text.strip()
                 movie_url = soup.find_all('link', {'rel': 'canonical'})[

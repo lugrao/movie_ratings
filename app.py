@@ -85,7 +85,8 @@ def filmaffinity_rating():
     title = request.args.get('t')
     original_title = request.args.get('ot')
     year = request.args.get('y')
-    rating, url = get_filmaffinity_rating(title, original_title, year)
+    alternative_titles = request.args.get('at')
+    rating, url = get_filmaffinity_rating(title, original_title, alternative_titles, year)
     return {'rating': rating, 'url': url}
 
 
