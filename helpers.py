@@ -1,6 +1,5 @@
 import os
 import re
-import math
 import requests
 import tmdbsimple as tmdb
 from bs4 import BeautifulSoup
