@@ -9,39 +9,43 @@ Movie Ratings
 
 {% block main %}
 {% if search_result %}
-<div class="container">
-    <h4>Results for "{{ query }}":</h4>
-    <ul id="results-list">
-        {% for person in search_result['results'] %}
-        {% if person != search_result['results'][0] %}
-        <hr>{% endif %}
-        <li class="person-info">
-            <a href="/person/{{ person['id'] }}">
-            {% if person['profile_path'] %}
-            <img src="https://www.themoviedb.org/t/p/w180_and_h180_face/{{ person['profile_path'] }}"
-                alt="{{ person['name'] }}">
-            {% else %}
-            <img src="{{ url_for('static', filename='blank_profile_pic.png') }}" alt="{{ person['name'] }}">
-            {% endif %}
-            {{ person['name'] }}</a> - {{ person['known_for_department'] }}
-            <br>
-            <br>
-            {% if person['known_for'] %}
-            <p>Known for:
-                {% for movie in person['known_for'] %}
-                <a href="/movie/{{ movie['id'] }}">{{ movie['title'] }}</a>{{ ',' if movie !=
-                person['known_for'][-1] else '.'}}
-                {% endfor %}
-            </p>
-            {% endif %}
-        </li>
-        {% endfor %}
-    </ul>
-    {% if search_result['total_pages'] > 1 %}
-    <hr id="load-more-hr">
-    <a id="load-more" data-query="{{ query }}" href="#more">Load more</a>
+    <div class="container">
+    {% if not search_result['results'] %}
+        <h4>Nothing was found.</h4>
+    {% else %}
+        <h4>Results for "{{ query }}":</h4>
+        <ul id="results-list">
+            {% for person in search_result['results'] %}
+            {% if person != search_result['results'][0] %}
+            <hr>{% endif %}
+            <li class="person-info">
+                <a href="/person/{{ person['id'] }}">
+                {% if person['profile_path'] %}
+                <img src="https://www.themoviedb.org/t/p/w180_and_h180_face/{{ person['profile_path'] }}"
+                    alt="{{ person['name'] }}">
+                {% else %}
+                <img src="{{ url_for('static', filename='blank_profile_pic.png') }}" alt="{{ person['name'] }}">
+                {% endif %}
+                {{ person['name'] }}</a> - {{ person['known_for_department'] }}
+                <br>
+                <br>
+                {% if person['known_for'] %}
+                <p>Known for:
+                    {% for movie in person['known_for'] %}
+                    <a href="/movie/{{ movie['id'] }}">{{ movie['title'] }}</a>{{ ',' if movie !=
+                    person['known_for'][-1] else '.'}}
+                    {% endfor %}
+                </p>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% if search_result['total_pages'] > 1 %}
+        <hr id="load-more-hr">
+        <a id="load-more" data-query="{{ query }}" href="#more">Load more</a>
+        {% endif %}
     {% endif %}
-</div>
+    </div>
 {% else %}
 <div class="container person">
     <h2>{{ info['name'] }}</h2>
