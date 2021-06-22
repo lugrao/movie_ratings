@@ -1,0 +1,26 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+beautifulsoup4 = "==4.9.3"
+bs4 = "==0.0.1"
+certifi = "==2020.12.5"
+chardet = "==4.0.0"
+click = "==7.1.2"
+idna = "==2.10"
+itsdangerous = "==1.1.0"
+requests = "==2.25.1"
+soupsieve = "==2.2.1"
+tmdbsimple = "==2.8.0"
+urllib3 = "==1.26.4"
+Flask = "==1.1.2"
+Jinja2 = "==2.11.3"
+MarkupSafe = "==1.1.1"
+Werkzeug = "==1.0.1"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
