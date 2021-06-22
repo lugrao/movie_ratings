@@ -19,19 +19,15 @@ h2 {
 }
 
 nav {
-  top: 0;
-  color: black;
+  font-family: "Merriweather", serif;
   text-align: center;
   padding: 5px 0;
 }
 
-nav {
-    font-family: "Merriweather", serif;
-}
-
 nav a:link,
 nav a:visited {
-  color: black;
+  /* color: black; */
+  color: #690000;
   text-decoration: none;
 }
 
