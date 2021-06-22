@@ -75,6 +75,18 @@ hr {
   clear: both;
 }
 
+.button {
+  height: 41px;
+  color: white;
+  background-color: #8f0000;
+  border: none;
+  border-radius: 7px;
+}
+
+.button:hover {
+  background-color: #9e0202;
+}
+
 .movie-info {
   padding: 0 10px;
   overflow: hidden;
