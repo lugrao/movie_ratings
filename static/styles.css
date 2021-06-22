@@ -161,7 +161,7 @@ hr {
   align-items: center;
 }
 
-.search-form input {
+.search-form .text-input {
   width: 85%;
   height: 36px;
   padding-left: 6px;
