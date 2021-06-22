@@ -130,7 +130,7 @@ hr {
   float: left;
   margin: 0 15px 5px 0;
   width: 100px;
-  border: 1px solid black;
+  border-radius: 3px;
 }
 
 .job-name {
