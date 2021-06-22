@@ -71,6 +71,14 @@ hr {
   clear: both;
 }
 
+.site-description {
+  font-size: 14px;
+  color: gray;
+  /* text-align: start; */
+  max-width: 450px;
+  margin: 0 auto;
+}
+
 .button {
   height: 41px;
   color: white;
@@ -147,7 +155,6 @@ hr {
   padding: 0 13px;
   background-color: white;
   padding: 12px;
-  /* border: 1px solid black; */
 }
 
 .search {
