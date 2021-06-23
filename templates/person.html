@@ -13,11 +13,11 @@ Movie Ratings
     {% if not search_result['results'] %}
     <h4>Nothing was found.</h4>
     {% else %}
-    <h4>Results for "{{ query }}":</h4>
+    <h2>Results for "{{ query }}":</h2>
     <ul id="results-list">
         {% for person in search_result['results'] %}
         {% if person != search_result['results'][0] %}
-        <hr>{% endif %}
+        {% endif %}
         <li class="person-info">
             <a href="/person/{{ person['id'] }}">
                 {% if person['profile_path'] %}
@@ -42,7 +42,6 @@ Movie Ratings
         {% endfor %}
     </ul>
     {% if search_result['total_pages'] > 1 %}
-    <hr id="load-more-hr">
     <a id="load-more" data-query="{{ query }}" href="#more">Load more</a>
     {% endif %}
     {% endif %}
@@ -64,15 +63,15 @@ Movie Ratings
     </div>
     {% for job in jobs.keys()|sort %}
     <h3 class=" job-name clickable" data-collapsed="true">{{ job }} ▸</h3>
-        <ul class="job-list">
-            {% for movie in jobs[job]|sort(attribute='year') %}
-            <li><a href="/movie/{{ movie['id'] }}">{{ movie['title'] }} {{ movie['year'] }}</a></li>
-            {% endfor %}
-        </ul>
-        {% endfor%}
-    </div>
-    {% endif %}
+    <ul class="job-list">
+        {% for movie in jobs[job]|sort(attribute='year') %}
+        <li><a href="/movie/{{ movie['id'] }}">{{ movie['title'] }} {{ movie['year'] }}</a></li>
+        {% endfor %}
+    </ul>
+    {% endfor%}
+</div>
+{% endif %}
 
-    <div class="div-to-deal-with-some-very-specific-problem-with-chrome-mobile"></div>
-    <script src="{{ url_for('static', filename='person.js') }}"></script>
-    {% endblock %}
+<div class="div-to-deal-with-some-very-specific-problem-with-chrome-mobile"></div>
+<script src="{{ url_for('static', filename='person.js') }}"></script>
+{% endblock %}

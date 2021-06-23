@@ -108,13 +108,13 @@ Movie Ratings{% if movie %} | {{ movie['title'] }} {{ '(' + movie['year'] + ')' 
         <h3 id="average-rating"></h3>
     </div>
     {% else %}
-    <h4>Couldn't find movie.</h4>
+    <h2>Couldn't find movie.</h2>
     {% endif %}
 </div>
 
 {% if not id and more_results and more_results['movies']|length > 1 %}
-<hr>
 <div class="container">
+    <hr>
     <h4>More results for "{{ title + ' ' + year if year else title}}":</h4>
     <ul id="more-results-list">
         {% for i in more_results['movies'] %}
@@ -128,8 +128,8 @@ Movie Ratings{% if movie %} | {{ movie['title'] }} {{ '(' + movie['year'] + ')' 
     {% endif %}
 </div>
 {% elif id and more_results and more_results['movies']|length > 1 %}
-<hr>
 <div class="container">
+    <hr>
     <h4>Similar movies:</h4>
     <ul id="more-results-list">
         {% for i in more_results['movies'] %}

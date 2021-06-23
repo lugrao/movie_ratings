@@ -6,7 +6,7 @@ Movie Ratings | movies['genre']['name']
 
 {% block main %}
 <div class="container">
-    <h4>{{ movies['genre']['name'] }} movies</h4>
+    <h2>{{ movies['genre']['name'] }} movies</h2>
     <ul id="genre-movie-list">
         {% for movie in movies['movies']%}
         <li><a href="/movie/{{ movie['id'] }}">{{ movie['title'] }} {{ movie['year'] }}</a></li>

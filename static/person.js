@@ -68,10 +68,9 @@ async function loadMoreResults() {
     }
 
     new_person.innerHTML = `
-        <hr>
         <li class="person-info">
             <a href="/person/${person["id"]}">
-            <img src="${imgPath}" alt="${person["name"]}">
+            <img src="${imgPath}" alt="${person["name"]}" width="100" height="100">
             ${person["name"]}</a> - ${person["known_for_department"]}
             <br>
             <br>
@@ -90,6 +89,5 @@ async function loadMoreResults() {
 
   if (page > response["total_pages"]) {
     $loadMore.style.display = "none"
-    document.querySelector("#load-more-hr").style.display = "none"
   }
 }
