@@ -98,7 +98,6 @@ hr {
 .movie-info img {
   float: left;
   margin: 0 20px 10px 0;
-  width: 35%;
   border-radius: 3px;
 }
 
@@ -236,7 +235,7 @@ hr {
   grid-template-columns: 1.3fr 0.8fr 0.5fr;
 }
 
-@media (max-width: 300px) {
+@media (max-width: 450px) {
   .movie-info img {
     float: none;
     display: block;
