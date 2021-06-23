@@ -4,15 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Movie Ratings is a wep application for searching movies and their ratings from IMDb, RottenTomatoes, Metacritic, Letterboxd, TMDb and FilmAffinity.">
+    <meta name="description"
+        content="Movie Ratings is a wep application for searching movies and their ratings from IMDb, RottenTomatoes, Metacritic, Letterboxd, TMDb and FilmAffinity.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.svg') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;600&family=Kanit:wght@800&display=swap" as="style"
-      onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload"
+        href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;600&family=Kanit:wght@800&display=swap"
+        as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;600&family=Kanit:wght@800&display=swap" />
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;600&family=Kanit:wght@800&display=swap" />
     </noscript>
     <title>{% block title %}{% endblock %}</title>
 </head>
@@ -20,7 +23,8 @@
 <body>
     <nav>
         <h1><a href="/">MOVIE RATINGS</a></h1>
-        <p class="site-description">Search for movies and their ratings from IMDb, RottenTomatoes, Metacritic, Letterboxd, TMDb and FilmAffinity.</p>
+        <p class="site-description">Search for movies and their ratings from IMDb, RottenTomatoes, Metacritic,
+            Letterboxd, TMDb and FilmAffinity.</p>
     </nav>
     <main>
         <div class="container search">
@@ -33,13 +37,15 @@
                 </select>
             </div>
 
-            <form id="search-movie" class="search-form" action="/search/movie" method="GET" autocomplete="off" style="display:none;">
+            <form id="search-movie" class="search-form" action="/search/movie" method="GET" autocomplete="off"
+                style="display:none;">
                 <input type="text" name="t" placeholder="Title" class="text-input">
                 <input type="number" name="y" placeholder="Year (optional)" class="text-input">
                 <input type="submit" value="Submit" class="clickable button">
             </form>
 
-            <form id="search-person" class="search-form" action="/search/person" method="GET" autocomplete="off" style="display:none;">
+            <form id="search-person" class="search-form" action="/search/person" method="GET" autocomplete="off"
+                style="display:none;">
                 <input type="text" name="n" placeholder="Name" class="text-input">
                 <input type="submit" value="Submit" class="clickable button">
             </form>

@@ -68,19 +68,22 @@ Movie Ratings{% if movie %} | {{ movie['title'] }} {{ '(' + movie['year'] + ')' 
         <div>
             <input id="imdb-rating" name="imdb-rating" type="checkbox" checked="true" class="clickable"
                 data-rating="{{ movie['imdb-rating'][1] }}" />
-            <label for="imdb-rating"><a href="{{ movie['imdb-url'] }}" target="_blank" rel="noreferrer">IMDb</a> rating: {{
+            <label for="imdb-rating"><a href="{{ movie['imdb-url'] }}" target="_blank" rel="noreferrer">IMDb</a> rating:
+                {{
                 movie['imdb-rating'][0] }}</label>
         </div>
         <div>
             <input id="rotten-tomatoes-rating" name="rotten-tomatoes-rating" type="checkbox" checked="true"
                 class="clickable" data-rating="{{ movie['rotten-tomatoes-rating'][1] }}" />
-            <label for="rotten-tomatoes-rating"><a href="{{ movie['rotten-tomatoes-url'] }}" target="_blank" rel="noreferrer">Rotten
+            <label for="rotten-tomatoes-rating"><a href="{{ movie['rotten-tomatoes-url'] }}" target="_blank"
+                    rel="noreferrer">Rotten
                     Tomatoes</a> rating: {{ movie['rotten-tomatoes-rating'][0] }}</label>
         </div>
         <div>
             <input id="metacritic-rating" name="metacritic-rating" type="checkbox" checked="true" class="clickable"
                 data-rating="{{ movie['metacritic-rating'][1] }}" />
-            <label for="metacritic-rating"><a href="{{ movie['metacritic-url'] }}" target="_blank" rel="noreferrer">Metacritic</a>
+            <label for="metacritic-rating"><a href="{{ movie['metacritic-url'] }}" target="_blank"
+                    rel="noreferrer">Metacritic</a>
                 rating: {{ movie['metacritic-rating'][0] }}</label>
         </div>
         <div>
@@ -91,7 +94,8 @@ Movie Ratings{% if movie %} | {{ movie['title'] }} {{ '(' + movie['year'] + ')' 
         <div>
             <input id="tmdb-rating" name="tmdb-rating" type="checkbox" checked="true" class="clickable"
                 data-rating="{{ movie['tmdb-rating'][1] }}" />
-            <label for="tmdb-rating"><a href="{{ movie['tmdb-url'] }}" target="_blank" rel="noreferrer">TMDb</a> rating: {{
+            <label for="tmdb-rating"><a href="{{ movie['tmdb-url'] }}" target="_blank" rel="noreferrer">TMDb</a> rating:
+                {{
                 movie['tmdb-rating'][0] }}</label>
         </div>
         <div>
