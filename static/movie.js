@@ -36,7 +36,7 @@ async function getRating(site) {
   let alternativeTitles = $movie.dataset.alternativetitles;
   let year = $movie.dataset.year;
   let $checkbox = document.getElementsByName(`${site}-rating`)[0];
-  let $label = $checkbox.previousElementSibling;
+  let $label = $checkbox.nextElementSibling;
   let labelName;
   let url = `/${site}-rating/`;
   let query;
@@ -121,7 +121,7 @@ function updateRating() {
       input.className = "";
       input.checked = false;
 
-      let label = input.previousElementSibling;
+      let label = input.nextElementSibling;
       label.style.color = "grey";
       if (label.innerText.includes("loading")) {
         label.style.color = "black";

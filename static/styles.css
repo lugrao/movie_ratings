@@ -188,20 +188,13 @@ hr {
 }
 
 .checkbox div {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
   border-width: 1px;
   border-color: #dddddd;
   border-style: none none dotted;
-  margin-top: 15px;
-  display: grid;
-  grid-template-columns: 1.8fr 0.2fr;
-  align-items: center;
-  margin: 0;
-  padding: 5px 0;
-}
-
-.checkbox div input {
-  height: 15px;
-  justify-self: end;
+  padding: 5px 3px;
 }
 
 .average-rating {
