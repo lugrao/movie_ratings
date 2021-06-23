@@ -13,11 +13,6 @@ main {
   margin-bottom: 50px;
 }
 
-h1,
-h2 {
-  text-align: center;
-}
-
 nav {
   text-align: center;
   padding: 5px 0;
@@ -88,6 +83,11 @@ hr {
 
 .button:hover {
   background-color: #9e0202;
+}
+
+.movie-title {
+  text-align: center;
+  font-size: 30px;
 }
 
 .movie-info {

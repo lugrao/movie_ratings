@@ -10,7 +10,7 @@ Movie Ratings{% if movie %} | {{ movie['title'] }} {{ '(' + movie['year'] + ')' 
     data-alternativetitles="{{ movie['alternative_titles'] }}" data-year="{{ movie['year'] }}"
     data-tmdbid="{{ movie['tmdb-id'] }}">
     {% if movie %}
-    <h1>{{ movie['title'] }} {{ '(' + movie['year'] + ')' if movie['year'] else '' }}</h1>
+    <h2 class="movie-title">{{ movie['title'] }} {{ '(' + movie['year'] + ')' if movie['year'] else '' }}</h2>
 
     <div class="movie-info">
         {% if movie['poster_path'] %}
@@ -102,8 +102,8 @@ Movie Ratings{% if movie %} | {{ movie['title'] }} {{ '(' + movie['year'] + ')' 
     </div>
 
     <div class="average-rating">
-        <h4>Average Rating:</h4>
-        <h2 id="average-rating"></h2>
+        <h3>Average Rating:</h3>
+        <h3 id="average-rating"></h3>
     </div>
     {% else %}
     <h4>Couldn't find movie.</h4>
