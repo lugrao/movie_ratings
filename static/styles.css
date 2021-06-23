@@ -107,7 +107,8 @@ hr {
 }
 
 .time-genres {
-  margin-bottom: 20px;
+  padding: 12px 0;
+  clear: both;
 }
 
 .time-genres p {
