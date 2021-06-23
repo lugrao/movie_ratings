@@ -1,5 +1,5 @@
 let $loadMore = document.getElementById("load-more")
-let $movieList = document.getElementById("movie-list")
+let $movieList = document.getElementById("genre-movie-list")
 let page = 2
 let genre_id = $loadMore.dataset.id
 $loadMore.addEventListener("click", loadMoreResults)
