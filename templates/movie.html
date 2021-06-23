@@ -66,36 +66,37 @@ Movie Ratings{% if movie %} | {{ movie['title'] }} {{ '(' + movie['year'] + ')' 
 
     <div class="checkbox">
         <div>
-            <input class="clickable" type="checkbox" checked="true" name="imdb-rating"
+            <input id="imdb-rating" name="imdb-rating" type="checkbox" checked="true" class="clickable"
                 data-rating="{{ movie['imdb-rating'][1] }}" />
             <label for="imdb-rating"><a href="{{ movie['imdb-url'] }}" target="_blank">IMDb</a> rating: {{
                 movie['imdb-rating'][0] }}</label>
         </div>
         <div>
-            <input class="clickable" type="checkbox" checked="true" name="rotten-tomatoes-rating"
-                data-rating="{{ movie['rotten-tomatoes-rating'][1] }}" />
+            <input id="rotten-tomatoes-rating" name="rotten-tomatoes-rating" type="checkbox" checked="true"
+                class="clickable" data-rating="{{ movie['rotten-tomatoes-rating'][1] }}" />
             <label for="rotten-tomatoes-rating"><a href="{{ movie['rotten-tomatoes-url'] }}" target="_blank">Rotten
                     Tomatoes</a> rating: {{ movie['rotten-tomatoes-rating'][0] }}</label>
         </div>
         <div>
-            <input class="clickable" type="checkbox" checked="true" name="metacritic-rating"
+            <input id="metacritic-rating" name="metacritic-rating" type="checkbox" checked="true" class="clickable"
                 data-rating="{{ movie['metacritic-rating'][1] }}" />
             <label for="metacritic-rating"><a href="{{ movie['metacritic-url'] }}" target="_blank">Metacritic</a>
-                rating: {{
-                movie['metacritic-rating'][0] }}</label>
+                rating: {{ movie['metacritic-rating'][0] }}</label>
         </div>
         <div>
-            <input class="clickable" type="checkbox" checked="true" name="letterboxd-rating" data-rating="-1" />
+            <input id="letterboxd-rating" name="letterboxd-rating" type="checkbox" checked="true" class="clickable"
+                data-rating="-1" />
             <label for="letterboxd-rating">Letterboxd rating: <span>loading...</span></label>
         </div>
         <div>
-            <input class="clickable" type="checkbox" checked="true" name="tmdb-rating"
+            <input id="tmdb-rating" name="tmdb-rating" type="checkbox" checked="true" class="clickable"
                 data-rating="{{ movie['tmdb-rating'][1] }}" />
             <label for="tmdb-rating"><a href="{{ movie['tmdb-url'] }}" target="_blank">TMDb</a> rating: {{
                 movie['tmdb-rating'][0] }}</label>
         </div>
         <div>
-            <input class="clickable" type="checkbox" checked="true" name="filmaffinity-rating" data-rating="-1" />
+            <input id="filmaffinity-rating" name="filmaffinity-rating" type="checkbox" checked="true" class="clickable"
+                data-rating="-1" />
             <label for="filmaffinity-rating">FilmAffinity rating: <span>loading...</span></label>
         </div>
     </div>
