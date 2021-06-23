@@ -19,14 +19,17 @@ h2 {
 }
 
 nav {
-  font-family: "Merriweather", serif;
   text-align: center;
   padding: 5px 0;
 }
 
+nav h1 {
+  font-family: "Kanit", sans-serif;
+  font-size: 35px;
+}
+
 nav a:link,
 nav a:visited {
-  /* color: black; */
   color: #690000;
   text-decoration: none;
 }
@@ -70,9 +73,9 @@ hr {
 .site-description {
   font-size: 14px;
   color: gray;
-  /* text-align: start; */
   max-width: 450px;
   margin: 0 auto;
+  padding-bottom: 30px;
 }
 
 .button {
