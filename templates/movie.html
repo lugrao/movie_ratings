@@ -13,7 +13,7 @@ Movie Ratings{% if movie %} | {{ movie['title'] }} {{ '(' + movie['year'] + ')' 
 
     <div class="movie-info">
         {% if movie['poster_path'] %}
-        <img src="https://www.themoviedb.org/t/p/w1280{{ movie['poster_path'] }}" alt="[{{ movie['title'] }} poster]">
+        <img src="https://www.themoviedb.org/t/p/w1280{{ movie['poster_path'] }}" alt="[{{ movie['title'] }} poster]" width="175" height="278">
         {% endif %}
         <p class="overview">{{ movie['overview'] }}</p>
         <hr>
