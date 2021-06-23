@@ -36,7 +36,7 @@ ul {
 }
 
 li {
-  margin-top: 8px;
+  padding: 8px 0;
 }
 
 form {
@@ -230,13 +230,6 @@ hr {
 
 #search-movie {
   grid-template-columns: 1.3fr 0.8fr 0.5fr;
-}
-#genre-movie-list li {
-  padding: 8px 0;
-}
-
-#genre-movie-list li a {
-  padding: 8px 0;
 }
 
 #load-more {
