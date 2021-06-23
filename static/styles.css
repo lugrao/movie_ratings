@@ -138,6 +138,7 @@ hr {
 .job-name {
   margin-bottom: 0;
   border: 1px solid white;
+  font-size: 17px;
 }
 
 .job-name:hover {

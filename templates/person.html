@@ -60,7 +60,7 @@ Movie Ratings
         {% endfor %}
     </div>
     {% for job in jobs.keys()|sort %}
-    <h4 class="job-name clickable" data-collapsed="true">{{ job }} ▸</h4>
+    <h3 class="job-name clickable" data-collapsed="true">{{ job }} ▸</h3>
     <ul class="job-list">
         {% for movie in jobs[job]|sort(attribute='year') %}
         <li><a href="/movie/{{ movie['id'] }}">{{ movie['title'] }} {{ movie['year'] }}</a></li>
