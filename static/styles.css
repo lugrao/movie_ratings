@@ -131,7 +131,6 @@ hr {
 .person-info img {
   float: left;
   margin: 0 15px 5px 0;
-  width: 100px;
   border-radius: 3px;
 }
 
@@ -238,7 +237,7 @@ hr {
     float: none;
     display: block;
     padding: 0;
-    margin: 0 auto 10px;
+    margin: 0 auto 20px;
     width: 80%;
     height: 100%;
   }

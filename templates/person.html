@@ -22,9 +22,9 @@ Movie Ratings
                 <a href="/person/{{ person['id'] }}">
                 {% if person['profile_path'] %}
                 <img src="https://www.themoviedb.org/t/p/w180_and_h180_face/{{ person['profile_path'] }}"
-                    alt="{{ person['name'] }}">
+                    alt="{{ person['name'] }}" width="100" height="100">
                 {% else %}
-                <img src="{{ url_for('static', filename='blank_profile_pic.png') }}" alt="{{ person['name'] }}">
+                <img src="{{ url_for('static', filename='blank_profile_pic.png') }}" alt="{{ person['name'] }}" width="100" height="100">
                 {% endif %}
                 {{ person['name'] }}</a> - {{ person['known_for_department'] }}
                 <br>
@@ -51,9 +51,9 @@ Movie Ratings
     <h2>{{ info['name'] }}</h2>
     <div class="person-info">
         {% if info['profile_path'] %}
-        <img src="https://www.themoviedb.org/t/p/w500{{ info['profile_path'] }}" alt="{{ info['name'] }}">
+        <img src="https://www.themoviedb.org/t/p/w500{{ info['profile_path'] }}" alt="{{ info['name'] }}" width="100" height="150>
         {% else %}
-        <img src="{{ url_for('static', filename='blank_profile_pic.png') }}" alt="{{ info['name'] }}">
+        <img src="{{ url_for('static', filename='blank_profile_pic.png') }}" alt="{{ info['name'] }}" width="100" height="150>
         {% endif %}
         {% for p in info['biography'].split('\n\n') %}
         <p>{{ p }}</p>
