@@ -77,7 +77,7 @@ async function getRating(site) {
     response = JSON.parse(storage.getItem(storageItem));
   }
 
-  $label.innerHTML = `<a href="${response.url}" target="_blank">${labelName}</a> rating: ${response.rating[0]}`;
+  $label.innerHTML = `<a href="${response.url}" target="_blank" rel="noreferrer">${labelName}</a> rating: ${response.rating[0]}`;
   $label.style.color = "black";
   $checkbox.dataset.rating = response.rating[1];
   $checkbox.checked = true;
@@ -95,7 +95,7 @@ async function getRating(site) {
 
     if (stored_data.rating[0] != response.rating[0]) {
       storage.setItem(storageItem, JSON.stringify(response));
-      $label.innerHTML = `<a href="${response.url}" target="_blank">${labelName}</a> rating: ${response.rating[0]}`;
+      $label.innerHTML = `<a href="${response.url}" target="_blank" rel="noreferrer">${labelName}</a> rating: ${response.rating[0]}`;
       $label.style.color = "black";
       $checkbox.dataset.rating = response.rating[1];
       $checkbox.checked = true;
