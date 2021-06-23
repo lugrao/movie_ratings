@@ -10,13 +10,12 @@ Movie Ratings{% if movie %} | {{ movie['title'] }} {{ '(' + movie['year'] + ')' 
     data-alternativetitles="{{ movie['alternative_titles'] }}" data-year="{{ movie['year'] }}"
     data-tmdbid="{{ movie['tmdb-id'] }}">
     {% if movie %}
-    <h2 class="movie-title">{{ movie['title'] }} {{ '(' + movie['year'] + ')' if movie['year'] else '' }}</h2>
-
     <div class="movie-info">
         {% if movie['poster_path'] %}
         <img src="https://www.themoviedb.org/t/p/w500{{ movie['poster_path'] }}" alt="[{{ movie['title'] }} poster]"
             width="175" height="278">
         {% endif %}
+        <h2 class="movie-title">{{ movie['title'] }} {{ '(' + movie['year'] + ')' if movie['year'] else '' }}</h2>
         <p class="overview">{{ movie['overview'] }}</p>
         <hr>
         <div class="time-genres">
