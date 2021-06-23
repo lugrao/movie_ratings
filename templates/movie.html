@@ -17,7 +17,6 @@ Movie Ratings{% if movie %} | {{ movie['title'] }} {{ '(' + movie['year'] + ')' 
         {% endif %}
         <h2 class="movie-title">{{ movie['title'] }} {{ '(' + movie['year'] + ')' if movie['year'] else '' }}</h2>
         <p class="overview">{{ movie['overview'] }}</p>
-        <hr>
         <div class="time-genres">
             <p><b>{{ movie['runtime'] }}</b></p>
             {% if movie['genres'] is not string %}
@@ -114,6 +113,7 @@ Movie Ratings{% if movie %} | {{ movie['title'] }} {{ '(' + movie['year'] + ')' 
 </div>
 
 {% if not id and more_results and more_results['movies']|length > 1 %}
+<hr>
 <div class="container">
     <h4>More results for "{{ title + ' ' + year if year else title}}":</h4>
     <ul id="more-results-list">
@@ -128,6 +128,7 @@ Movie Ratings{% if movie %} | {{ movie['title'] }} {{ '(' + movie['year'] + ')' 
     {% endif %}
 </div>
 {% elif id and more_results and more_results['movies']|length > 1 %}
+<hr>
 <div class="container">
     <h4>Similar movies:</h4>
     <ul id="more-results-list">
