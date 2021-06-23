@@ -114,6 +114,10 @@ hr {
   font-size: 14px;
 }
 
+.person h2 {
+  text-align: center;
+}
+
 .person ul {
   padding-left: 40px;
   margin-top: 7px;
