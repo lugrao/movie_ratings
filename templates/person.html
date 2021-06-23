@@ -51,7 +51,7 @@ Movie Ratings
     <h2>{{ info['name'] }}</h2>
     <div class="person-info">
         {% if info['profile_path'] %}
-        <img src="https://www.themoviedb.org/t/p/w1280{{ info['profile_path'] }}" alt="{{ info['name'] }}">
+        <img src="https://www.themoviedb.org/t/p/w500{{ info['profile_path'] }}" alt="{{ info['name'] }}">
         {% else %}
         <img src="{{ url_for('static', filename='blank_profile_pic.png') }}" alt="{{ info['name'] }}">
         {% endif %}
