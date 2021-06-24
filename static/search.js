@@ -11,12 +11,10 @@ $selectSearch.addEventListener("change", handleChange)
 if (sessionStorage.getItem("search_type")) {
   $selectSearch.value = sessionStorage.getItem("search_type")
   switchSearch($selectSearch.value)
-  // document.getElementById($selectSearch.value)[0].focus()
 } else {
   sessionStorage.setItem("search_type", "search-movie")
   $selectSearch.value = "search-movie"
   switchSearch("search-movie")
-  // document.getElementById($selectSearch.value)[0].focus()
 }
 
 function handleChange(event) {
