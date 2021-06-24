@@ -249,6 +249,7 @@ def get_genre(id, name='', page=1):
     genre = tmdb.Genres(id)
     genre_movies = genre.movies(page=page, include_all_movies=True)
     movies = []
+    name = ' '.join(name.split('%20'))
 
     for movie in genre_movies['results']:
         try:
