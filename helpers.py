@@ -4,9 +4,12 @@ import requests
 import tmdbsimple as tmdb
 from bs4 import BeautifulSoup
 
+TMDB_KEY = os.environ.get('TMDB_KEY')
+OMDB_KEY = os.environ.get('OMDB_KEY')
+
 
 def get_movie(title='', year='', tmdb_id='', imdb_id=''):
-    tmdb.API_KEY = os.environ.get('TMDB_KEY')
+    tmdb.API_KEY = TMDB_KEY
 
     id = tmdb_id
     if not id:
@@ -92,7 +95,7 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
 
 
 def get_more_movies(title='', year='', tmdb_id='', page=2):
-    tmdb.API_KEY = os.environ.get('TMDB_KEY')
+    tmdb.API_KEY = TMDB_KEY
 
     id = tmdb_id
     if not id:
@@ -126,10 +129,9 @@ def get_more_movies(title='', year='', tmdb_id='', page=2):
 
 
 def get_omdb_data(imdb_id):
-    omdb_key = os.environ.get('OMDB_KEY')
 
     try:
-        url = f'http://www.omdbapi.com/?apikey={omdb_key}&i={imdb_id}'
+        url = f'http://www.omdbapi.com/?apikey={OMDB_KEY}&i={imdb_id}'
         response = requests.get(url)
         response.raise_for_status()
     except requests.RequestException:
@@ -193,7 +195,7 @@ def get_omdb_data(imdb_id):
 
 
 def get_person(id='', query='', page=1):
-    tmdb.API_KEY = os.environ.get('TMDB_KEY')
+    tmdb.API_KEY = TMDB_KEY
 
     if id:
         person = tmdb.People(id)
@@ -245,7 +247,7 @@ def get_person(id='', query='', page=1):
 
 
 def get_genre(id, name='', page=1):
-    tmdb.API_KEY = os.environ.get('TMDB_KEY')
+    tmdb.API_KEY = TMDB_KEY
     genre = tmdb.Genres(id)
     genre_movies = genre.movies(page=page, include_all_movies=True)
     movies = []
