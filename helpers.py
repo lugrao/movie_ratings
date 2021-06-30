@@ -11,34 +11,35 @@ OMDB_KEY = os.environ.get('OMDB_KEY')
 def get_movie(title='', year='', tmdb_id='', imdb_id=''):
     tmdb.API_KEY = TMDB_KEY
 
-    id = tmdb_id
-    if not id:
+    movie_id = tmdb_id
+    if not movie_id:
         search = tmdb.Search()
         res = search.movie(query=title, year=year, page=1)
 
         try:
-            id = res['results'][0]['id']
+            movie_id = res['results'][0]['id']
         except:
             return None, None
 
-    movie_result = tmdb.Movies(id)
+    movie_result = tmdb.Movies(movie_id)
     movie = movie_result.info()
-    credits = movie_result.credits()
+    movie_credits = movie_result.credits()
     omdb = get_omdb_data(movie['imdb_id'])
 
     year = f'{movie["release_date"][:4]}' if movie['release_date'] else ''
 
     direction = [{'name': i['name'], 'job': i['job'], 'id': i['id']}
-                 for i in credits['crew'] if i['job'] == 'Director']
+                 for i in movie_credits['crew'] if i['job'] == 'Director']
     if not direction:
         direction = omdb['direction']
 
     writing = [{'name': i['name'], 'job': i['job'], 'id': i['id']}
-               for i in credits['crew'] if i['department'] == 'Writing']
+               for i in movie_credits['crew'] if i['department'] == 'Writing']
     if not writing:
         writing = omdb['writing']
 
-    actors = [{'name': i['name'], 'id': i['id']} for i in credits['cast'][:6]]
+    actors = [{'name': i['name'], 'id': i['id']}
+              for i in movie_credits['cast'][:6]]
     if not actors:
         actors = omdb['actors']
 
@@ -69,7 +70,7 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
         'rotten-tomatoes-url': f'https://www.rottentomatoes.com/search?search={movie["title"]}',
         'metacritic-rating': omdb['metacritic_rating'],
         'metacritic-url': f'https://www.metacritic.com/search/movie/{movie["title"]}/results',
-        'tmdb-id': id,
+        'tmdb-id': movie_id,
         'tmdb-rating': [str(movie['vote_average']) + '/10', float(movie['vote_average'])] if movie['vote_count'] > 0 else ['Not found', -1],
         'tmdb-url': f'https://www.themoviedb.org/movie/{movie["id"]}'
     }
@@ -97,13 +98,13 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
 def get_more_movies(title='', year='', tmdb_id='', page=2):
     tmdb.API_KEY = TMDB_KEY
 
-    id = tmdb_id
-    if not id:
+    movie_id = tmdb_id
+    if not movie_id:
         search = tmdb.Search()
         res = search.movie(query=title, year=year, page=page)
-        id = res['results'][0]['id']
+        movie_id = res['results'][0]['id']
 
-    movie_result = tmdb.Movies(id)
+    movie_result = tmdb.Movies(movie_id)
 
     if tmdb_id:
         # Show similar movies when movie ID es provided
@@ -194,11 +195,11 @@ def get_omdb_data(imdb_id):
     }
 
 
-def get_person(id='', query='', page=1):
+def get_person(person_id='', query='', page=1):
     tmdb.API_KEY = TMDB_KEY
 
-    if id:
-        person = tmdb.People(id)
+    if person_id:
+        person = tmdb.People(person_id)
         crew_data = person.movie_credits()['crew']
         cast_data = person.movie_credits()['cast']
         jobs = {}
@@ -246,9 +247,9 @@ def get_person(id='', query='', page=1):
     return result
 
 
-def get_genre(id, name='', page=1):
+def get_genre(genre_id, name='', page=1):
     tmdb.API_KEY = TMDB_KEY
-    genre = tmdb.Genres(id)
+    genre = tmdb.Genres(genre_id)
     genre_movies = genre.movies(page=page, include_all_movies=True)
     movies = []
     name = ' '.join(name.split('%20'))
@@ -267,7 +268,7 @@ def get_genre(id, name='', page=1):
         })
 
     movies_data = {
-        'genre': {'name': name, 'id': id},
+        'genre': {'name': name, 'id': genre_id},
         'movies': movies,
         'total_pages': genre_movies['total_pages']
     }

@@ -37,21 +37,21 @@ def search_person():
     return render_template('person.html', search_result=result, query=name, info='')
 
 
-@app.route('/movie/<id>')
-def movie(id):
-    movie, more_results = get_movie(tmdb_id=id)
-    return render_template('movie.html', title='', year='', id=id, movie=movie, more_results=more_results)
+@app.route('/movie/<movie_id>')
+def movie(movie_id):
+    movie, more_results = get_movie(tmdb_id=movie_id)
+    return render_template('movie.html', title='', year='', id=movie_id, movie=movie, more_results=more_results)
 
 
-@app.route('/person/<id>')
-def person(id):
-    info, jobs = get_person(id)
+@app.route('/person/<person_id>')
+def person(person_id):
+    info, jobs = get_person(person_id)
     return render_template('person.html', info=info, jobs=jobs)
 
 
-@app.route('/genre/<id>/<name>')
-def genre(id, name):
-    movies = get_genre(id, name)
+@app.route('/genre/<genre_id>/<name>')
+def genre(genre_id, name):
+    movies = get_genre(genre_id, name)
     return render_template('genre.html', movies=movies)
 
 
@@ -95,9 +95,9 @@ def filmaffinity_rating():
 def more_results():
     title = request.args.get('t')
     year = request.args.get('y')
-    id = request.args.get('id')
+    movie_id = request.args.get('id')
     page = int(request.args.get('p'))
-    return get_more_movies(title, year, id, page)
+    return get_more_movies(title, year, movie_id, page)
 
 
 @app.route('/more-person-results/<query>/<page>')
@@ -105,6 +105,6 @@ def more_person_results(query, page):
     return get_person(query=query, page=page)
 
 
-@app.route('/more-genre-results/<id>/<page>')
-def more_genre_results(id, page):
-    return get_genre(id, page=page)
+@app.route('/more-genre-results/<genre_id>/<page>')
+def more_genre_results(genre_id, page):
+    return get_genre(genre_id, page=page)
