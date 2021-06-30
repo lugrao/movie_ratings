@@ -14,14 +14,14 @@ def index():
 def search_title():
     title = request.args.get('t').strip()
     if not title:
-        return 'You must provide a title.'
+        return render_template('index.html', error='You must provide a title.')
 
     year = request.args.get('y')
     if year != '':
         try:
             int(year)
         except ValueError:
-            return 'You must provide a valid year.'
+            return render_template('index.html', error='You must provide a valid year.')
 
     movie, more_results = get_movie(title, year)
 
@@ -32,7 +32,7 @@ def search_title():
 def search_person():
     name = request.args.get('n')
     if not name:
-        return 'You must provide a name.'
+        return render_template('index.html', error='You must provide a name.')
     result = get_person(query=name)
     return render_template('person.html', search_result=result, query=name, info='')
 

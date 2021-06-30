@@ -5,4 +5,12 @@ Movie Ratings
 {% endblock%}
 
 {% block main %}
+
+{% if error %}
+<div class="container">
+    <h2>{{ error }}</h2>    
+</div>
+{% endif %}
+
+
 {% endblock %}
