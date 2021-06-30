@@ -11,7 +11,7 @@ Movie Ratings
 {% if search_result %}
 <div class="container">
     {% if not search_result['results'] %}
-    <h4>Nothing was found.</h4>
+    <h2>Couldn't find person.</h2>
     {% else %}
     <h2>Results for "{{ query }}":</h2>
     <ul id="results-list">
