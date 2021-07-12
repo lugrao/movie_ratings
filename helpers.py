@@ -18,7 +18,7 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
 
         try:
             movie_id = res['results'][0]['id']
-        except:
+        except Exception:
             return None, None
 
     movie_result = tmdb.Movies(movie_id)
@@ -142,22 +142,22 @@ def get_omdb_data(imdb_id):
 
     try:
         direction = movie['Director']
-    except:
+    except Exception:
         direction = 'N/A'
 
     try:
         writing = movie['Writer']
-    except:
+    except Exception:
         writing = 'N/A'
 
     try:
         actors = movie['Actors']
-    except:
+    except Exception:
         actors = 'N/A'
 
     try:
         genres = movie['Genre']
-    except:
+    except Exception:
         genres = 'N/A'
 
     try:
@@ -180,7 +180,7 @@ def get_omdb_data(imdb_id):
 
     try:
         poster = movie['Poster']
-    except:
+    except Exception:
         poster = ''
 
     return {
@@ -211,7 +211,7 @@ def get_person(person_id='', query='', page=1):
 
             try:
                 year = f'({movie["release_date"][:4]})' if movie['release_date'] else ''
-            except:
+            except Exception:
                 year = ''
 
             jobs[movie['job']].append({
@@ -225,7 +225,7 @@ def get_person(person_id='', query='', page=1):
             for movie in cast_data:
                 try:
                     year = f'({movie["release_date"][:4]})' if movie['release_date'] else ''
-                except:
+                except Exception:
                     year = ''
 
                 jobs['Actor'].append({
@@ -257,7 +257,7 @@ def get_genre(genre_id, name='', page=1):
     for movie in genre_movies['results']:
         try:
             year = f'({movie["release_date"][:4]})' if movie['release_date'] else ''
-        except:
+        except Exception:
             year = ''
 
         movies.append({
@@ -288,7 +288,7 @@ def get_letterboxd_rating(tmdb_id, title='', year=''):
             attrs={'name': 'twitter:data2'})[0]['content'].split()[0]), 1)
 
         return [str(movie_rating) + '/5', movie_rating * 2], movie_url
-    except:
+    except Exception:
         url = f'https://letterboxd.com/search/{title} {year}'
         if movie_url:
             url = movie_url
@@ -311,7 +311,7 @@ def get_rottentomatoes_rating(title, year):
             res = requests.get(url)
             data = res.json()
             req_count += 1
-        except:
+        except Exception:
             return rating, movie_url
 
         if not data['movies']['items']:
@@ -326,7 +326,7 @@ def get_rottentomatoes_rating(title, year):
                     if movie['url']:
                         movie_url = movie['url']
                     break
-            except:
+            except Exception:
                 continue
 
         if not data['movies']['pageInfo']['endCursor']:
@@ -352,7 +352,7 @@ def get_metacritic_rating(title, year):
         res = requests.get(url, headers={'User-Agent': user_agent})
         soup = BeautifulSoup(res.text, 'html.parser')
         results = soup.find_all('div', class_='result_wrap')
-    except:
+    except Exception:
         return ['No found', -1], url
 
     for movie in results:
@@ -365,7 +365,7 @@ def get_metacritic_rating(title, year):
 
     try:
         return [f'{rating}/100', float(rating) / 10], movie_url
-    except:
+    except Exception:
         return ['Not found', -1], url
 
 
@@ -383,7 +383,7 @@ def get_filmaffinity_rating(title, original_title, alternative_titles, year):
     try:
         res = requests.get(url)
         soup = BeautifulSoup(res.text, 'html.parser')
-    except:
+    except Exception:
         return ['Not found', -1], url
 
     results = soup.find_all('div', class_='se-it mt')
@@ -399,7 +399,7 @@ def get_filmaffinity_rating(title, original_title, alternative_titles, year):
                     rating = movie.find('div', class_='avgrat-box').text
                     movie_url = movie.a.get('href')
                     break
-        except:
+        except Exception:
             pass
     else:
         try:
@@ -411,7 +411,7 @@ def get_filmaffinity_rating(title, original_title, alternative_titles, year):
             try:
                 for i in soup.find_all('dd', class_='akas')[0].ul.find_all('li'):
                     titles.append(clean(i.text))
-            except:
+            except Exception:
                 pass
 
             if year == y and (title in titles or original_title in titles or t in alternative_titles):
@@ -419,10 +419,10 @@ def get_filmaffinity_rating(title, original_title, alternative_titles, year):
                     'div', {'id': 'movie-rat-avg'})[0].text.strip()
                 movie_url = soup.find_all('link', {'rel': 'canonical'})[
                     0].get('href')
-        except:
+        except Exception:
             pass
 
     try:
         return [f'{rating}/10', float(rating)], movie_url
-    except:
+    except Exception:
         return ['Not found', -1], url
