@@ -47,14 +47,19 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
     if not genres:
         genres = omdb['genres']
 
-    imdb_url = f'https://www.imdb.com/find?ref_=nv_sr_sm&q={movie["title"]} {movie["release_date"][:4]}'
+    imdb_url = (f'https://www.imdb.com/find?ref_=nv_sr_sm&q={movie["title"]}'
+                f' {movie["release_date"][:4]}')
+
     if movie['imdb_id']:
         imdb_url = 'https://www.imdb.com/title/' + movie['imdb_id']
 
     movie_data = {
         'title': movie['title'],
         'original_title': movie['original_title'],
-        'alternative_titles': [i['title'] for i in movie_result.alternative_titles()['titles'] if i['iso_3166_1'] in ['GB', 'US']],
+        'alternative_titles': [
+            i['title'] for i in movie_result.alternative_titles()['titles']
+            if i['iso_3166_1'] in ['GB', 'US']
+        ],
         'year': year,
         'runtime': f'{movie["runtime"]} mins' if movie['runtime'] else '',
         'overview': movie['overview'],
@@ -67,11 +72,18 @@ def get_movie(title='', year='', tmdb_id='', imdb_id=''):
         'imdb-rating': omdb['imdb_rating'],
         'imdb-url': imdb_url,
         'rotten-tomatoes-rating': omdb['rotten_tomatoes_rating'],
-        'rotten-tomatoes-url': f'https://www.rottentomatoes.com/search?search={movie["title"]}',
+        'rotten-tomatoes-url': (
+            f'https://www.rottentomatoes.com/search?search={movie["title"]}'
+        ),
         'metacritic-rating': omdb['metacritic_rating'],
-        'metacritic-url': f'https://www.metacritic.com/search/movie/{movie["title"]}/results',
+        'metacritic-url': (
+            f'https://www.metacritic.com/search/movie/{movie["title"]}/results'
+        ),
         'tmdb-id': movie_id,
-        'tmdb-rating': [str(movie['vote_average']) + '/10', float(movie['vote_average'])] if movie['vote_count'] > 0 else ['Not found', -1],
+        'tmdb-rating': [
+            str(movie['vote_average']) + '/10',
+            float(movie['vote_average'])
+        ] if movie['vote_count'] > 0 else ['Not found', -1],
         'tmdb-url': f'https://www.themoviedb.org/movie/{movie["id"]}'
     }
 
@@ -205,14 +217,15 @@ def get_person(person_id='', query='', page=1):
         jobs = {}
 
         for movie in crew_data:
-
             if movie['job'] not in jobs:
                 jobs[movie['job']] = []
 
+            year = ''
             try:
-                year = f'({movie["release_date"][:4]})' if movie['release_date'] else ''
+                if movie['release_date']:
+                    year = f'({movie["release_date"][:4]})'
             except Exception:
-                year = ''
+                pass
 
             jobs[movie['job']].append({
                 'title': movie['title'],
@@ -222,11 +235,14 @@ def get_person(person_id='', query='', page=1):
 
         if cast_data:
             jobs['Actor'] = []
+
             for movie in cast_data:
+                year = ''
                 try:
-                    year = f'({movie["release_date"][:4]})' if movie['release_date'] else ''
+                    if movie['release_date']:
+                        year = f'({movie["release_date"][:4]})'
                 except Exception:
-                    year = ''
+                    pass
 
                 jobs['Actor'].append({
                     'title': movie['title'],
@@ -255,10 +271,12 @@ def get_genre(genre_id, name='', page=1):
     name = ' '.join(name.split('%20'))
 
     for movie in genre_movies['results']:
+        year = ''
         try:
-            year = f'({movie["release_date"][:4]})' if movie['release_date'] else ''
+            if movie['release_date']:
+                year = f'({movie["release_date"][:4]})'
         except Exception:
-            year = ''
+            pass
 
         movies.append({
             'title': movie['title'],
@@ -305,7 +323,8 @@ def get_rottentomatoes_rating(title, year):
     req_count = 0
     while req_count < 3:
         next_page = ''
-        url = f'https://www.rottentomatoes.com/napi/search/all?type=movie&searchQuery={title}&after={next_page}'
+        url = ('https://www.rottentomatoes.com/napi/search'
+               f'/all?type=movie&searchQuery={title}&after={next_page}')
 
         try:
             res = requests.get(url)
@@ -343,7 +362,8 @@ def get_metacritic_rating(title, year):
     url = f'https://www.metacritic.com/search/movie/{title}/results'
     rating = None
     movie_url = None
-    user_agent = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.37'
+    user_agent = ('Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 '
+                  '(KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.37')
 
     if not year:
         return ['No found', -1], url
@@ -375,7 +395,8 @@ def get_filmaffinity_rating(title, original_title, alternative_titles, year):
         title = re.sub(r'[\(\[].*?[\)\]]|[^a-z0-9]', '', title)
         return title
 
-    url = f'https://www.filmaffinity.com/en/search.php?stype=title&stext={title}'
+    url = ('https://www.filmaffinity.com'
+           f'/en/search.php?stype=title&stext={title}')
     rating = None
     movie_url = None
     title = clean(title)
@@ -395,7 +416,9 @@ def get_filmaffinity_rating(title, original_title, alternative_titles, year):
                 y = movie.find('div', class_='ye-w').text
                 titles = [title, original_title]
 
-                if (clean(t) in titles or t in alternative_titles) and y == year:
+                if (
+                    clean(t) in titles or t in alternative_titles
+                ) and y == year:
                     rating = movie.find('div', class_='avgrat-box').text
                     movie_url = movie.a.get('href')
                     break
@@ -409,12 +432,15 @@ def get_filmaffinity_rating(title, original_title, alternative_titles, year):
             y = soup.find_all('dd', {'itemprop': 'datePublished'})[0].text
             titles = [clean(t), ot]
             try:
-                for i in soup.find_all('dd', class_='akas')[0].ul.find_all('li'):
+                akas = soup.find_all('dd', class_='akas')[0].ul.find_all('li')
+                for i in akas:
                     titles.append(clean(i.text))
             except Exception:
                 pass
 
-            if year == y and (title in titles or original_title in titles or t in alternative_titles):
+            if year == y and (title in titles
+                              or original_title in titles
+                              or t in alternative_titles):
                 rating = soup.find_all(
                     'div', {'id': 'movie-rat-avg'})[0].text.strip()
                 movie_url = soup.find_all('link', {'rel': 'canonical'})[
