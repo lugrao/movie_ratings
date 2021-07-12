@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
-from helpers import get_movie, get_more_movies, get_person, get_genre
-from helpers import get_rottentomatoes_rating, get_letterboxd_rating, get_filmaffinity_rating, get_metacritic_rating
+
+from helpers import (get_movie, get_more_movies, get_person, get_genre,
+                     get_rottentomatoes_rating, get_metacritic_rating,
+                     get_letterboxd_rating, get_filmaffinity_rating)
 
 app = Flask(__name__)
 
@@ -21,11 +23,20 @@ def search_title():
         try:
             int(year)
         except ValueError:
-            return render_template('index.html', error='You must provide a valid year.')
+            return render_template(
+                'index.html',
+                error='You must provide a valid year.'
+            )
 
     movie, more_results = get_movie(title, year)
 
-    return render_template('movie.html', title=title, year=year, movie=movie, more_results=more_results)
+    return render_template(
+        'movie.html',
+        title=title,
+        year=year,
+        movie=movie,
+        more_results=more_results
+    )
 
 
 @app.route('/search/person/')
@@ -34,13 +45,25 @@ def search_person():
     if not name:
         return render_template('index.html', error='You must provide a name.')
     result = get_person(query=name)
-    return render_template('person.html', search_result=result, query=name, info='')
+    return render_template(
+        'person.html',
+        search_result=result,
+        query=name,
+        info=''
+    )
 
 
 @app.route('/movie/<movie_id>')
 def movie(movie_id):
     movie, more_results = get_movie(tmdb_id=movie_id)
-    return render_template('movie.html', title='', year='', id=movie_id, movie=movie, more_results=more_results)
+    return render_template(
+        'movie.html',
+        title='',
+        year='',
+        id=movie_id,
+        movie=movie,
+        more_results=more_results
+    )
 
 
 @app.route('/person/<person_id>')
