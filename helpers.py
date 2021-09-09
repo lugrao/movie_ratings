@@ -333,10 +333,10 @@ def get_rottentomatoes_rating(title, year):
         except Exception:
             return rating, movie_url
 
-        if not data['movies']['items']:
+        if not data['movie']['items']:
             break
 
-        for movie in data['movies']['items']:
+        for movie in data['movie']['items']:
             try:
                 if movie['name'] == title and movie['releaseYear'] == year:
                     if movie['tomatometerScore']:
@@ -348,9 +348,9 @@ def get_rottentomatoes_rating(title, year):
             except Exception:
                 continue
 
-        if not data['movies']['pageInfo']['endCursor']:
+        if not data['movie']['pageInfo']['endCursor']:
             break
-        next_page = data['movies']['pageInfo']['endCursor']
+        next_page = data['movie']['pageInfo']['endCursor']
 
         if rating or movie_url:
             break
