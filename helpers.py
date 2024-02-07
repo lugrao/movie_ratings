@@ -314,45 +314,29 @@ def get_letterboxd_rating(tmdb_id, title='', year=''):
 
 
 def get_rottentomatoes_rating(title, year):
-    rating = ['Not found', -1]
-    movie_url = f'https://www.rottentomatoes.com/search?search={title}'
+    rating = ["Not found", -1]
+    movie_url = f"https://www.rottentomatoes.com/search?search={title}"
 
     if not year:
         return rating, movie_url
 
-    req_count = 0
-    while req_count < 3:
-        next_page = ''
-        url = ('https://www.rottentomatoes.com/napi/search'
-               f'/all?type=movie&searchQuery={title}&after={next_page}')
+    try:
+        res = requests.get(movie_url)
+        soup = BeautifulSoup(res.text, "html.parser")
+        movies = soup.find_all(type="movie")[0].find_all("search-page-media-row")
+    except Exception as e:
+        print(e)
+        return rating, movie_url
 
-        try:
-            res = requests.get(url)
-            data = res.json()
-            req_count += 1
-        except Exception:
-            return rating, movie_url
-
-        if not data['movie']['items']:
-            break
-
-        for movie in data['movie']['items']:
-            try:
-                if movie['name'] == title and movie['releaseYear'] == year:
-                    if movie['tomatometerScore']:
-                        rating = movie['tomatometerScore']['score']
-                        rating = [f'{rating}%', float(rating) / 10]
-                    if movie['url']:
-                        movie_url = movie['url']
-                    break
-            except Exception:
-                continue
-
-        if not data['movie']['pageInfo']['endCursor']:
-            break
-        next_page = data['movie']['pageInfo']['endCursor']
-
-        if rating or movie_url:
+    for movie in movies:
+        movie_name = movie.find_all("a")[-1].text.strip()
+        url = movie.a["href"]
+        movie_score = movie.attrs["tomatometerscore"]
+        release_year = movie.attrs["releaseyear"]
+        
+        if movie_name == title and release_year == year:
+            rating = [f"{movie_score}%", float(movie_score) / 10]
+            movie_url = url
             break
 
     return rating, movie_url
