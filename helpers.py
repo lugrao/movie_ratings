@@ -343,33 +343,37 @@ def get_rottentomatoes_rating(title, year):
 
 
 def get_metacritic_rating(title, year):
-    url = f'https://www.metacritic.com/search/movie/{title}/results'
+    url = f"https://www.metacritic.com/search/{title}/"
     rating = None
     movie_url = None
     user_agent = ('Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 '
                   '(KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.37')
 
     if not year:
-        return ['No found', -1], url
+        return ['Not found', -1], url
 
     try:
         res = requests.get(url, headers={'User-Agent': user_agent})
         soup = BeautifulSoup(res.text, 'html.parser')
-        results = soup.find_all('div', class_='result_wrap')
-    except Exception:
-        return ['No found', -1], url
+        movies = soup.find_all('a', class_=lambda css_class : css_class is not None and css_class in "c-pageSiteSearch-results-item")
+    except Exception as e:
+        print(e)
+        return ['Not found', -1], url
 
-    for movie in results:
-        t = movie.a.text.strip()
-        y = movie.p.text.strip()[-4:]
-        if t == title and y == year:
-            rating = movie.span.text
-            movie_url = f'https://www.metacritic.com{results[0].a.get("href")}'
+    for movie in movies:
+        t = movie.find('p').text.strip().lower()
+        y = movie.find_all('span')[2].text.strip()
+        is_movie = 'movie' == movie.find_all('span')[0].text.strip().lower()
+    
+        if t == title.lower() and y == year and is_movie:
+            rating = movie.find_all('span')[-1].text.strip()
+            movie_url = f"https://www.metacritic.com{movie['href']}"
             break
 
     try:
         return [f'{rating}/100', float(rating) / 10], movie_url
-    except Exception:
+    except Exception as e:
+        print(e)
         return ['Not found', -1], url
 
 
