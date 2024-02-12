@@ -342,16 +342,19 @@ def get_rottentomatoes_rating(title, year):
         print(e)
         return rating, movie_url
 
-    for movie in movies:
-        movie_name = movie.find_all("a")[-1].text.strip()
-        url = movie.a["href"]
-        movie_score = movie.attrs["tomatometerscore"]
-        release_year = movie.attrs["releaseyear"]
+    try:
+        for movie in movies:
+            movie_name = movie.find_all("a")[-1].text.strip()
+            url = movie.a["href"]
+            movie_score = movie.attrs["tomatometerscore"]
+            release_year = movie.attrs["releaseyear"]
 
-        if movie_name == title and release_year == year:
-            rating = [f"{movie_score}%", float(movie_score) / 10]
-            movie_url = url
-            break
+            if movie_name == title and release_year == year:
+                rating = [f"{movie_score}%", float(movie_score) / 10]
+                movie_url = url
+                break
+    except Exception:
+        pass
 
     return rating, movie_url
 
