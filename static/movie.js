@@ -31,9 +31,9 @@ async function getRating(site) {
   let storageItem = `/movie/${movieId}/${site}`
   let $movie = document.getElementById("movie")
   let tmdbID = $movie.dataset.tmdbid
-  let title = $movie.dataset.title
-  let originalTitle = $movie.dataset.originaltitle
-  let alternativeTitles = $movie.dataset.alternativetitles
+  let title = encodeURIComponent($movie.dataset.title)
+  let originalTitle = encodeURIComponent($movie.dataset.originaltitle)
+  let alternativeTitles = encodeURIComponent($movie.dataset.alternativetitles)
   let year = $movie.dataset.year
   let $checkbox = document.getElementsByName(`${site}-rating`)[0]
   let $label = $checkbox.nextElementSibling
